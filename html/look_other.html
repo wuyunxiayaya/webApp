@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" type="text/css" href="../css/api.css" />
+  <link rel="stylesheet" type="text/css" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/home/look_other.css">
+  <title>Document</title>
+</head>
+<body>
+  <div class="empty">
+
+  <div class="personData">
+
+      <div class="portrait" onclick="showAction()">
+          <img src="../image/img/hl.jpg" class="img_tx" id="img_tx" alt="">
+      </div>
+      <span class="user_name">asdasd</span>
+
+      <!-- <div style="display:inline-block" class="log_area">
+          <div class="log_on">注册 |</div>
+          <div class="personName">
+              登陆
+          </div>
+      </div> -->
+  </div>
+</div>
+
+</body>
+
+<script type="text/javascript" src="../script/api.js">
+</script>
+<script src="../script/SHA1.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script>
+apiready = function(){
+  otherInfo();
+}
+function initApiCloud() {
+    var model = api.require('model'); //model对象
+    model.config({
+        appId: 'A6007193486393',
+        appKey: '6AC0DC07-3FF1-FA88-F56D-CF7BC56F280E',
+        host: 'https://d.apicloud.com' //固定地址
+    });
+    return model;
+}
+
+function otherInfo(){
+  var otherName = $api.getStorage('otherName');
+  console.log(otherName)
+  var model = initApiCloud();
+  var query = api.require('query');
+  query.createQuery(function(ret,err){
+    if(ret){
+      var qId = ret.qid;
+      query.whereEqual({
+        qid:qId,
+        column:'username',
+        value:otherName
+      })
+      model.findAll({
+          class: 'user',
+          qid: qId
+      },function(ret,err){
+        if(ret){
+          console.log(JSON.stringify(ret))
+          console.log(JSON.stringify(ret[0].username))
+          console.log(JSON.stringify(ret[0].img))
+          console.log(typeof(ret[0].username))
+          var userimg = ret[0].img;
+          var username = ret[0].username;
+          $api.attr($api.dom(".empty .personData .portrait img"),'src',userimg);
+          $api.text($api.dom(".empty .personData .user_name"),'用户名：'+username);
+        }
+      });
+
+    }
+  })
+}
+
+
+
+
+</script>
+</html>

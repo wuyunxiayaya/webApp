@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/home/read.css">
+    <title>阅读</title>
+</head>
+
+<body>
+
+    <div class="top_guide">
+        <div class="top_img">
+            <!-- 返回按钮 -->
+            <img class="back" src="../image/img/back.png" alt="">
+            <!-- 大标题 -->
+            <!-- 红楼梦 -->
+        </div>
+        <!--章节  -->
+        <span class="section">
+      <!-- 第一章: -->
+    </span>
+
+
+
+
+
+    </div>
+
+</body>
+<script type="text/javascript" src="../script/api.js">
+</script>
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+<script>
+    apiready = function() {
+      openBook();
+        // closed();
+        api.addEventListener({
+            name: 'read'
+        }, function(ret, err){
+            if( ret ){
+              console.log('1111111111111111111111111111111')
+              openBook();
+                //  alert( JSON.stringify( ret ) );
+                console.log('1111111111111111111111111111111')
+
+            }else{
+                //  alert( JSON.stringify( err ) );
+            }
+        });
+    }
+
+    function initConfig() {
+        var model = api.require("model");
+        model.config({
+            appId: 'A6007193486393',
+            appKey: '6AC0DC07-3FF1-FA88-F56D-CF7BC56F280E',
+            host: 'https://d.apicloud.com'
+        })
+        return model;
+
+    }
+
+    function nextPage(curIndex,len,bookDesc,bookSrc,height,type){
+      let filePath = 'fs://'+bookSrc+'/'+bookDesc[curIndex];
+      let bookReader = api.require('bookReader');
+      let openProgress = type == 'next' ? 0:100;
+      bookReader.open({
+        x: '0',
+        y: '0',
+        animType: 'flip',
+        // progress:0,
+        bg: '#eed',
+        w: 'api.frameWidth',
+        h: height,
+        filePath: filePath,
+        // codingType:'',
+        textStyle: {
+            size: 16,
+            color: '#ff0000'
+        },
+        progress:openProgress,
+        fixedOn: api.frameName
+      }, function(ret, err){
+        console.log(JSON.stringify(ret))
+        console.log(JSON.stringify(err))
+        var eventType = ret.eventType;
+                var progress = ret.progress;
+                if ("page_over" == eventType) {
+                    if (curIndex >= len) {
+                        api.toast({
+                            msg: '已经是最后一页了',
+                            duration: 1000,
+                            location: "top"
+                        });
+                    }else{
+                      curIndex ++;
+                      nextPage(curIndex,len,bookDesc,bookSrc,height,'next')
+                    }
+                  }
+        //
+                if ("page_begin" == eventType) {
+                    if (curIndex<=0) {
+                        api.toast({
+                            msg: '已经是第一页了',
+                            duration: 1000,
+                            location: "top"
+                        });
+                    }else{
+                      curIndex --;
+                      nextPage(curIndex,len,bookDesc,bookSrc,height,'prev')
+                    }
+                }
+      });
+
+    }
+
+    // 阅读器
+    function openBook(){
+      var bookDesc = api.pageParam.rebookList; //全部章节
+      var bookLength = api.pageParam.bookLength; //一共有多少章
+      var index = api.pageParam.index; //
+      var bookName = api.pageParam.theBook; //书名
+      console.log(bookDesc)
+      alert(JSON.stringify(bookDesc))
+
+      console.log(typeof bookDesc)
+      console.log(bookLength)
+      console.log(index)
+      console.log(bookName)
+      var bookSrc = bookName+'完'
+      let descPath = 'fs://'+bookSrc+'/'+bookDesc[index];
+      console.log(descPath)
+
+      let height = 0.98*api.winHeight;
+      let bookReader = api.require('bookReader');
+      bookReader.open({
+            x: '0',
+            y: '0',
+            animType: 'flip',
+            // progress:0,
+            bg: '#eed',
+            w: 'api.frameWidth',
+            h: height,
+            filePath: descPath,
+            // codingType:'',
+            progress:0,
+            textStyle: {
+                size: 16,
+                color: '#ff0000'
+            },
+            fixedOn: api.frameName
+        }, function(ret, err) {
+          console.log(JSON.stringify(ret))
+          console.log(JSON.stringify(err))
+          var eventType = ret.eventType;
+                  var progress = ret.progress;
+                  if ("page_over" == eventType) {
+                      if (index >= bookLength) {
+                          api.toast({
+                              msg: '已经是最后一页了',
+                              duration: 1000,
+                              location: "top"
+                          });
+                      }else{
+                        index ++;
+                        nextPage(index,bookLength,bookDesc,bookSrc,height)
+                      }
+                    }
+          //
+                  if ("page_begin" == eventType) {
+                      if (index<=0) {
+                          api.toast({
+                              msg: '已经是第一页了',
+                              duration: 1000,
+                              location: "top"
+                          });
+                      }else{
+                        index --;
+                        nextPage(index,bookLength,bookDesc,bookSrc,height)
+                      }
+                  }
+
+    })
+  }
+
+    function closed() {
+        $api.addEvt($api.dom(".top_guide .top_img .back"), 'click', function() {
+            api.closeWin({
+                name: 'read'
+            });
+
+        });
+    }
+</script>
+
+</html>

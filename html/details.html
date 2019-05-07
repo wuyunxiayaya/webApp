@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/home/details.css">
+    <link rel="stylesheet" href="../dist/css/swiper.min.css">
+    <script src="../dist/js/swiper.min.js"></script>
+</head>
+
+<body>
+
+    <div class="empty">
+        <!-- 头部详情 -->
+        <div class="write" style="position:absolute;z-index:1;display:none;margin-top:30px;height:100px;width:100%;text-align:center;"><textarea style="height:80px;border:1px solid #dde;width:80%;outline:none;" rows="5" cols="10" placeholder="想说点什么"></textarea>
+            <br><button onclick="forward()" class="sure">确认</button><button onclick="cancelbtn()" class="cancel">取消</button></div>
+
+
+        <div class="topDetail">
+
+            <div class="wrap">
+                <div class="reader"></div>
+
+                <div class="book">
+
+                    <img onclick="backPage()" src="../image/img/fanhui.png" alt="">
+
+                    <!-- <img src="../image/img/hl.jpg" alt=""> -->
+                </div>
+
+                <div class="icon">
+
+                    <i>作者:</i><span>无名氏</span><br>
+                    <span>收藏</span>
+                    <img onclick="collecter()" class="un_collection" src="../image/img/shoucang1.png" alt="">
+                    <img onclick="uncollecter()" class="collection" src="../image/img/collection.png" alt="">
+                    <!-- <em class="collection" alt=""></em> -->
+                    <span onclick="cli()">转发 <img class="forward" src="../image/img/zhuanfa.png" alt=""></span>
+                </div>
+
+                <!-- <img class="sc" src="../image/img/shoucang1.png" alt=""> -->
+                <!-- <img class="sc" src="../image/img/shoucang.png" alt=""> -->
+            </div>
+        </div>
+        <!-- 内容简介 -->
+        <div class="vessel">
+            <div class="brief">
+                <span class="title">《红楼梦》</span>
+                <span class="text">
+        </span>
+            </div>
+        </div>
+        <!-- 回合 -->
+        <div class="round">
+            <!-- <li><a href="">第一回合:林冲棒打黄教头</a></li> -->
+
+            <ul class="list">
+                <li></li>
+
+            </ul>
+            <bottom onclick="showdesc()" class="btn">
+                <div class="imgText1">
+                    <span>
+          展开查看所有章节
+          </span>
+                    <img class="img1" src="../image/img/arrow_down.png" alt="">
+                </div>
+                <!-- <div class="">
+          收起
+          <img class="img2" src="../image/img/arrow_upon.png" alt="">
+        </div> -->
+            </bottom>
+        </div>
+        <!-- 今日推荐 -->
+        <!-- <div class="recomment swiper-container">
+            <span class="maxText">今日推荐</span>
+            <ul class="swiper-wrap">
+                <li class="swiper-slide">
+                    <img src="../image/img/tuijian1.jpg" alt="">
+                    <text>西厢记</text>
+                </li>
+                <li class="swiper-slide">
+                    <img src="../image/img/tuijian2.jpg" alt="">
+                    <text>天龙八部</text>
+                </li>
+                <li class="swiper-slide">
+                    <img src="../image/img/tuijian3.jpg" alt="">
+                    <text>天龙八部</text>
+                </li>
+                <li class="swiper-slide">
+                    <img src="../image/img/tuijian4.jpg" alt="">
+                    <text>天龙八部</text>
+                </li>
+                <li class="swiper-slide">
+                    <img src="../image/img/tuijian3.jpg" alt="">
+                    <text>天龙八部</text>
+                </li>
+                <li class="swiper-slide">
+                    <img src="../image/img/tuijian4.jpg" alt="">
+                    <text>天龙八部</text>
+                </li>
+            </ul>
+        </div> -->
+    </div>
+
+    <script src="../script/collect.js"></script>
+    <script type="text/javascript" src="../script/api.js">
+    </script>
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+    <script>
+        apiready = function() {
+          brieft();
+            // backPage();
+            downloadBook();
+            // cli();
+            collectGet();
+            foot();
+      api.sendEvent({
+          name: 'read',
+          extra: {
+              key1: 'value1',
+              key2: 'value2'
+          }
+      });
+      api.addEventListener({
+          name: 'brieft'
+      }, function(ret, err){
+          if( ret ){
+            alert("list1 brief")
+               brief();
+               alert("list2 brief")
+          }else{
+               alert( JSON.stringify( err ) );
+          }
+      });
+        }
+
+        function backPage() {
+            //返回键  返回上一页
+            // $api.addEvt($api.dom(".empty .topDetail .wrap .book img"), 'click', function() {
+                api.closeWin({
+                    name: 'details'
+                })
+            // })
+        }
+        var rebookList = '';
+        var rebookflag = true;
+
+        function initConfig() {
+            var model = api.require("model");
+            model.config({
+                appId: 'A6007193486393',
+                appKey: '6AC0DC07-3FF1-FA88-F56D-CF7BC56F280E',
+                host: 'https://d.apicloud.com'
+            })
+            return model;
+
+        }
+        function downloadBook() {
+          rebookflag = false
+            // var allDesc = $api.getStorage('allDesc');
+            // console.log(typeof allDesc)
+            // // var jsonDesc = $api.strToJson (allDesc)
+            // // var jsonDesc = allDesc.replace(/\'/g, "\"");//换成json格式
+            // // var objDesc = JSON.parse(allDesc);//转换成对象
+            // console.log(objDesc)
+            // desc = '第二回张翼德怒鞭督邮何国舅谋诛宦竖.txt'
+            // alert(index)
+
+              var theBook = $api.getStorage('theBook');
+              alert(theBook)
+              alert('theBook')
+              // alert(theBook)
+              theBook = $api.trim(theBook);
+            // theBook = '三国演义';
+            // var bkurl = 'http://d.apicloud.com/mcm/api/file'+theBook+'.zip';
+            console.log(theBook);
+            var toPath = 'fs://' + theBook
+            var toPathed = 'fs://' + theBook+'完'
+            // var bookname =
+            var fs = api.require('fs')
+                fs.readDir({
+                    path: toPathed
+                }, function(ret, err) {
+                  alert(JSON.stringify("redir"))
+                  alert(JSON.stringify(ret))
+                  alert(JSON.stringify(err))
+                    if (ret.status) {
+                      alert(JSON.stringify('f1'))
+
+                      // alert(JSON.stringify(ret.data));
+                        // alert(JSON.stringify('readret'));
+                        rebookList = ret.data;
+                        rebookflag = true;
+                        // alert(JSON.stringify(rebookList));
+                    } else {
+                      // alert("meiyou")
+                      // alert(JSON.stringify(rebookList));
+                      alert(JSON.stringify('f2'))
+
+                      // alert(JSON.stringify(rebookList));
+                        var theBookZip = theBook + '.zip';
+                        var model = initConfig();
+                        var query = api.require("query");
+                        query.createQuery(function(ret, err) {
+                          alert(JSON.stringify('f3'))
+
+                            var queryId = ret.qid;
+                            query.whereEqual({
+                                qid: queryId,
+                                column: 'name',
+                                value: theBookZip
+                            })
+                            model.findAll({
+                                qid: queryId,
+                                class: "file"
+                            }, function(ret, err) {
+                              alert(JSON.stringify('f4'))
+
+                                if (ret) {
+                                    console.log(JSON.stringify(ret))
+                                    if (ret.length !== 0) {
+                                      alert(JSON.stringify('f5'))
+
+                                        var bkurl = ret[0].url;
+                                        api.download({
+                                            url: bkurl,
+                                            savePath: toPath,
+                                        }, function(ret, err) {
+                                          alert(JSON.stringify('f1'))
+
+                                            console.log(toPathed + 'toPathed')
+                                            if (ret) {
+                                              alert(JSON.stringify('f2'))
+
+                                                alert(JSON.stringify('downok'))
+                                                var zip = api.require('zip');
+                                                zip.unarchive({
+                                                    file: toPath,
+                                                    toPath: toPathed
+                                                }, function(ret, err) {
+                                                  console.log(JSON.stringify('downok1'))
+                                                    if (ret.status) {
+                                                      alert(JSON.stringify('downok2'))
+                                                      console.log(JSON.stringify(toPathed))
+                                                      console.log(JSON.stringify(toPath))
+                                                        fs.readDir({
+                                                            path: toPathed
+                                                        }, function(ret, err) {
+                                                          console.log(JSON.stringify('downo3k'))
+                                                          console.log(JSON.stringify(ret))
+                                                          alert(JSON.stringify('downo3k'))
+
+                                                          alert(JSON.stringify(ret))
+                                                            if (ret.status) {
+                                                                // alert(JSON.stringify('readret'));
+                                                                rebookflag = true;
+                                                                rebookList = ret.data;
+                                                                alert(JSON.stringify('downok4'))
+
+                                                                fs.rmdir({
+                                                                    path: toPath
+                                                                }, function(ret, err) {
+                                                                    if (ret.status) {
+                                                                        // alert(JSON.stringify("okrm"));
+                                                                    }
+                                                                });
+                                                            }
+                                                        });
+                                                    }
+                                                });
+
+                                            }else{
+                                              alert(JSON.stringify('ef1'))
+
+                                            }
+                                        });
+                                    }
+                                    // alert(rebookList)
+                                };
+
+                            })
+                        })
+                    }
+                })
+        }
+
+        function forward() {//转发
+            // $api.addEvt($api.dom(" .empty .sure"), 'click', function(e) {
+            $(".write").hide();
+            e = event || window.event;//取消默认事件
+            e.stopPropagation();//取消冒泡事件
+            var theBook = $api.getStorage('theBook');
+            var theAuthor = $api.getStorage('theAuthor');
+            var theIntro = $api.getStorage('theIntro');
+            var theImg = $api.getStorage('theImg');
+            var theId = $api.getStorage('theId');
+            console.log(theBook);
+            console.log(theId);
+            console.log(theIntro);
+            console.log(theImg);
+            var text = $(".write textarea").val();
+            // $api.setStorage('text',text)
+            console.log(text);
+            var userImg = $api.getStorage('userImage');
+            console.log(userImg)
+            var username = $api.getStorage('username');
+            console.log(typeof(username))
+            console.log(username)
+            var uid = $api.getStorage('uid');
+            console.log(uid)
+            var time = new Date()
+            console.log((time).toISOString().slice(0, 10));
+            console.log(time)
+            $.ajax({
+                    url: 'http://112.74.39.180:80/forward/add',
+                    type: 'post',
+                    dataType: 'json',
+                    data: {
+                        theId: theId,
+                        theBook: theBook,
+                        theAuthor: theAuthor,
+                        theIntro: theIntro,
+                        theImg: theImg,
+                        text: text,
+                        userImg: userImg,
+                        username: username,
+                        uid: uid
+                    }
+                })
+                .done(function(ret) {
+                    console.log(JSON.stringify(ret));
+                    if (ret.status == 1) {
+                        api.openWin({
+                            name: 'frame2',
+                            url: './frame2.html',
+                            // pageParam: {
+                            // openIndex: 2
+                            // }
+                        })
+                    } else {
+                        api.toast({
+                            msg: ret.msg,
+                            duration: '1000',
+                            localtion: 'top'
+                        });
+                    }
+                })
+                .fail(function(err) {
+                    console.log(JSON.stringify(err))
+                })
+        }
+
+
+        function cli() {
+            // 转发
+            // $api.addEvt($api.dom(".icon span .forward"), 'click', function() {//点击转发按钮
+                $(".write").show();//输入框出现
+                $(".write textarea").focus();//聚焦
+
+
+                // $(".empty").hide();
+            // })
+        }
+        function cancelbtn(){//点击取消按钮
+          // $api.addEvt($api.dom(" .empty .cancel"), 'click', function() {//点击取消按钮
+              $(".write").hide();//输入框消失
+          // })
+        }
+        function showdesc(){
+          // $api.addEvt($api.dom(".empty .round .btn"), 'click', function() { //点击展开收起按钮
+              if ($api.attr($api.dom(".empty .round .btn img"), 'src') == '../image/img/arrow_down.png') {
+                  $api.css($api.dom(".empty .round .list"), 'display:block');
+                  $api.text($api.dom(".empty .round .btn .imgText1 span"), '收起');
+                  // $api.removeCls($api.dom(".empty .round .btn div"),'imgText1')
+                  $api.attr($api.dom(".empty .round .btn img"), "src", '../image/img/arrow_upon.png');
+              } else {
+                  $api.css($api.dom(".empty .round .list"), 'display:none');
+                  $api.text($api.dom(".empty .round .btn .imgText1 span"), '展开查看所有章节');
+                  $api.attr($api.dom(".empty .round .btn img"), "src", '../image/img/arrow_down.png');
+              }
+          // });
+        }
+        // 查询数据库中此用户是否收藏了此书
+        function collectGet(){//新建查询
+          var userId = $api.getStorage('uid');//用户id
+          // var collectId = $api.getStorage('theId');
+          var collectId = api.pageParam.id;//书本id
+          console.log(userId)
+          console.log(collectId)
+          $.ajax({
+            url:'http://112.74.39.180:80/collect/get',
+            type:'post',
+            dataType:'json',
+            data:{
+              userId:userId,
+              collectId:collectId
+            }
+          })
+          .done(function(ret){
+            console.log(JSON.stringify(ret));
+            // $api.setStorage('key', 'value');
+            if(ret.status == 1){
+              $api.css($api.dom(".empty .topDetail .wrap .icon .collection"), 'display:inline-block'); //红心
+              $api.css($api.dom(".empty .topDetail .wrap .icon .un_collection"), 'display:none'); //灰心
+            }else{
+              $api.css($api.dom(".empty .topDetail .wrap .icon .collection"), 'display:none'); //红心
+              $api.css($api.dom(".empty .topDetail .wrap .icon .un_collection"), 'display:inline-block'); //灰心
+            }
+          })
+          .fail(function(err){
+            console.log(JSON.stringify(err))
+          })
+        }
+        //取消收藏
+        function uncollecter() {
+          var userId = $api.getStorage('uid');//用户id
+          // var collectId = $api.getStorage('theId');
+          var collectId = api.pageParam.id;//书本id
+          console.log(userId)
+          console.log(collectId)
+          $.ajax({
+            url:'http://112.74.39.180:80/collect/del',
+            type:'post',
+            dataType:'json',
+            data:{
+              userId:userId,
+              collectId:collectId
+            }
+          })
+          .done(function(ret){
+            console.log(JSON.stringify(ret));
+            if(ret.status == 1){
+              $api.css($api.dom(".empty .topDetail .wrap .icon .collection"), 'display:none'); //红心
+              $api.css($api.dom(".empty .topDetail .wrap .icon .un_collection"), 'display:inline-block'); //灰心
+            }else{
+              $api.css($api.dom(".empty .topDetail .wrap .icon .collection"), 'display:inline-block'); //红心
+              $api.css($api.dom(".empty .topDetail .wrap .icon .un_collection"), 'display:none'); //灰心
+            }
+          })
+          .fail(function(err){
+            console.log(JSON.stringify(err))
+          })
+            $api.css($api.dom(".empty .topDetail .wrap .icon .collection"), 'display:none'); //红心
+            $api.css($api.dom(".empty .topDetail .wrap .icon .un_collection"), 'display:inline-block'); //灰心v
+        }
+        // 收藏
+        function collecter() {
+            $api.css($api.dom(".empty .topDetail .wrap .icon .collection"), 'display:inline-block'); //红心
+            $api.css($api.dom(".empty .topDetail .wrap .icon .un_collection"), 'display:none'); //灰心
+            var userId = $api.getStorage('uid');
+            var collectBook = $api.getStorage('theBook');
+            var collectAuthor = $api.getStorage('theAuthor');
+            var collectIntro = $api.getStorage('theIntro');
+            var collectImg = $api.getStorage('theImg');
+            // var collectId = $api.getStorage('theId');
+            var collectId = api.pageParam.id;//书本id
+            console.log(userId)
+            console.log(collectBook)
+            console.log(collectAuthor)
+            console.log(collectIntro)
+            console.log(collectImg)
+            console.log(collectId)
+            $.ajax({
+                    url: 'http://112.74.39.180:80/collect/add',
+                    type: 'post',
+                    dataType: 'JSON',
+                    data: {
+                        userId: userId,
+                        collectBook: collectBook,
+                        collectAuthor: collectAuthor,
+                        collectIntro: collectIntro,
+                        collectImg: collectImg,
+                        collectId: collectId
+                    }
+                })
+                .done(function(ret) {
+                    console.log(JSON.stringify(ret))
+                    console.log(ret.id);
+                    if (ret.status == 1) {
+                        api.toast({
+                            msg: '锦囊+1',
+                            duration: '1000',
+                            localtion: 'middle'
+                        });
+                    }
+                })
+                .fail(function(err) {
+                    console.log(JSON.stringify(err))
+                })
+        }
+
+        function foot(){//足迹
+          var userId = $api.getStorage('uid');//用户id
+          var footBook = $api.getStorage('theBook');//书名
+          var footAuthor = $api.getStorage('theAuthor');//作者
+          var footIntro = $api.getStorage('theIntro');//简介
+          var footImg = $api.getStorage('theImg');//书图片
+          // var footId = $api.getStorage('theId');
+          var footId = api.pageParam.id;//书本id
+          console.log(userId)
+          console.log(footBook)
+          console.log(footAuthor)
+          console.log(footIntro)
+          console.log(footImg)
+          console.log(footId)
+          $.ajax({
+                  url: 'http://112.74.39.180:80/foot/add',
+                  type: 'post',
+                  dataType: 'JSON',
+                  data: {
+                      userId: userId,
+                      footBook: footBook,
+                      footAuthor: footAuthor,
+                      footIntro: footIntro,
+                      footImg: footImg,
+                      footId: footId
+                  }
+              })
+              .done(function(ret) {
+                  console.log(JSON.stringify(ret))
+                  console.log(ret.id);
+                  if (ret.status == 1) {
+                      // api.toast({
+                      //     msg: '锦囊+1',
+                      //     duration: '1000',
+                      //     localtion: 'middle'
+                      // });
+                  }
+              })
+              .fail(function(err) {
+                  console.log(JSON.stringify(err))
+              })
+        }
+
+
+        function descClick(self) {//点击跳转到阅读界面
+          // if(!rebookflag) return;
+            var index = self.index()
+            var desc = $api.trim(self.text());
+            // alert(index)
+            var theBook = $api.getStorage('theBook');
+            console.log(theBook)
+            console.log(JSON.stringify(rebookList))
+            alert(JSON.stringify(rebookList))
+            alert(JSON.stringify(rebookflag))
+            console.log(JSON.stringify(rebookflag))
+            theBook = $api.trim(theBook);
+            var bookLength = rebookList.length;
+              api.openWin({
+                  name: 'read',
+                  url: './read.html',
+                  pageParam: {
+                      index: index,
+                      rebookList:rebookList,
+                      theBook:theBook,
+                      bookLength:bookLength
+                  }
+              });
+              api.sendEvent({
+                  name: 'read',
+                  extra: {
+                      key1: 'value1',
+                      key2: 'value2'
+                  }
+              });
+
+
+        }
+
+        function brieft() {
+          // alert('amao')
+            var id = api.pageParam.id;
+            // alert(id)
+            // alert('1111111111111222')
+            var img = api.pageParam.img;
+            var intro = api.pageParam.intro;
+            console.log(id)
+            console.log(img)
+            console.log(intro)
+            $.ajax({
+                    url: 'http://112.74.39.180:80/detail/book',
+                    type: 'post',
+                    dataType: 'json',
+                    data: {
+                        id: id
+                    }
+              })
+                .done(function(ret) {
+                    $api.setStorage('theBook', ret[0].name);
+                    $api.setStorage('theAuthor', ret[0].author);
+                    $api.setStorage('theIntro', ret[0].intro);
+                    $api.setStorage('theImg', ret[0].img);
+                    $api.setStorage('theId', ret[0].id);
+                    // console.log(JSON.stringify(ret));
+                    console.log(typeof ret[0].bookdesc)
+                    // $api.setStorage('allDesc', ret[0].bookdesc);
+
+                    var reDesc = ret[0].bookdesc;
+                    $api.setStorage('theDesc', reDesc);
+
+                    var theDesc = JSON.parse(reDesc) //json格式转换成对象
+                    console.log(theDesc)
+                    // console.log(typeof theDesc)
+                    // console.log(theDesc.length)
+                    // console.log(theDesc[0])
+                    var len = theDesc.length;
+                    // alert('amao')
+                    // 展示界面
+                    $api.text($api.dom(".icon span"), ret[0].author); //添加作者
+                    $api.text($api.dom(".vessel .brief .text"), ret[0].intro); //简介
+                    $api.text($api.dom(".vessel .brief span"), ret[0].name); //书名
+                    $api.css($api.dom(".empty .topDetail"), "background-image:url(" + ret[0].img + ")"); //图片
+                    for (var i = 0; i < len; i++) { //展示章节
+                        $api.append($api.dom(".list li"), `<li class="lis" onclick="descClick($(this))"><a href="" >${theDesc[i]}</a></li>`)
+                    }
+                })
+                .fail(function(err) {
+                })
+        }
+    </script>
+</body>
+
+</html>

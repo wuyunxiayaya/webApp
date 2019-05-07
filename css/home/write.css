@@ -1,0 +1,17 @@
+.inputs textarea{
+  width:100%;
+  outline: none;
+  border:1px solid #dde;
+  margin-top:40px;
+}
+.inputs .btn{
+  /*border:1px solid black;*/
+  margin:0 auto;
+  width:50%;
+}
+.inputs .btn button{
+  height:35px;
+  width:49%;
+  border:1px solid #dde;
+  outline: none;
+}

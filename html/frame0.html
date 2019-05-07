@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>主页</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/home/frame0.css" />
+    <link rel="stylesheet" href="../dist/css/swiper.min.css">
+    <script src="../dist/js/swiper.min.js"></script>
+
+</head>
+
+<body>
+    <div class="wrap">
+        <!-- 头部导条 -->
+        <div class="topPrepare">
+            <ul>
+                <img src="../image/img/shu.png" alt="">
+                <img src="../image/img/shu_1.png" alt="">
+            </ul>
+            <span class="quote">名言名句</span>
+        </div>
+        <!-- 搜索框 -->
+        <div class="mainInput">
+            <div class="begin_search">
+                <input class="search" type="Search" autocomplete="off" name="baike-search" placeholder="请输入关键字">
+                <button>搜索</button>
+            </div>
+        </div>
+        <!-- swiper插件的轮播图 -->
+        <div class="swiper-container">
+            <div class="swiper-wrapper vessel">
+                <!-- <div class="swiper-slide mainCircle1">
+                    <ul>
+                        <li class="hl">
+                            <span class="text">都云作者痴，谁解其中味？<br/><p>《红楼梦》</p></span>
+                            <img src="../image/img/hl.jpg" alt="">
+                        </li>
+                    </ul>
+                </div> -->
+
+                <!-- <div class="swiper-slide mainCircle2">
+                    <ul>
+                        <li>
+                            <span class="text">我简直吓坏了，呆呆地占在那里。
+          <br/><p>《鲁滨逊漂流记》</p></span>
+                            <img src="../image/img/qsn.jpg" alt="">
+                        </li>
+                    </ul>
+                </div>
+                <div class="swiper-slide mainCircle3">
+                    <ul>
+                        <li>
+                            <span class="text">大自然希望儿童在成年之前要像儿童的样子。
+          <br/><p>《爱弥儿》</p></span>
+                            <img src="../image/img/wt1.jpg" alt="">
+                        </li>
+                    </ul>
+                </div>
+                <div class="swiper-slide mainCircle4">
+                    <ul>
+                        <li>
+                            <span class="text">生存还是毁灭，这是一个值得思考的问题。
+          <br/><p>《哈姆雷特》</p></span>
+                            <img src="../image/img/wg.jpg" alt="">
+                        </li>
+                    </ul>
+                </div>
+            </div> -->
+                <!-- 如果需要分页器 -->
+                <div class="swiper-pagination"></div>
+                <!-- 如果需要导航按钮 -->
+                <!-- <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div> -->
+            </div>
+            <!-- 推荐栏 -->
+            <div class="selected">
+                <div class="titled">
+                    <p class="line">
+
+                    </p>
+                    <span>
+      每日精选
+    </span>
+                </div>
+                <div class="recommend">
+
+
+                </div>
+
+            </div>
+            <!-- 大分类 -->
+            <div class="gather">
+                <div class="box">
+                    <div class="theBox">
+                        <span class="title">中国名著</span><br/>
+                        <span class="contentd chinese">
+      <img src="../image/img/wenxuemingzhu.png" alt="">
+      名著
+    </span>
+                    </div>
+                    <div class="theBox">
+                        <span class="title">儿童读物</span><br/>
+                        <span class="contentd child">
+      <img src="../image/img/flower.png" alt="">
+      儿童
+    </span>
+                    </div>
+                    <div class="theBox">
+                        <span class="title">外国名著</span><br/>
+                        <span class="contentd country">
+      <img src="../image/img/yingwenmingzhu.png" alt="">
+      名著
+    </span>
+                    </div>
+                    <div class="theBox">
+                        <span class="title">
+      <img src="../image/img/huo.png" alt="">更多人读</span><br/>
+                        <span class="contentd comment">
+      <div class="img">
+      <img src="../image/img/remen.png" alt="">
+      </div>
+      <span>热门</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+</body>
+<script type="text/javascript" src="../script/api.js">
+</script>
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="../script/SHA1.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        openCircle(); //打开界面
+        random(); //随机精选
+        // getData(); //轮播
+        api.setRefreshHeaderInfo({ //刷新函数
+            visible: true,
+            bgColor: 'rgba(0,0,0,0)',
+            textColor: '#666',
+            textDown: '下拉刷新',
+            textUp: '释放刷新'
+        }, function(ret, err) {
+            toDoRequest();
+        });
+
+        function toDoRequest() {
+            var connectionType = api.connectionType;
+            console.log(connectionType)
+            if (connectionType == 'none') {
+                setTimeout(function() {
+                    api.refreshHeaderLoadDone(); //复位下拉刷新
+                    api.toast({
+                        msg: '刷新失败',
+                        duration: '1000',
+                        localtion: 'middle'
+                    });
+                }, 2000)
+            } else {
+                setTimeout(function() {
+                    api.refreshHeaderLoadDone(); //复位下拉刷新
+                    api.toast({
+                        msg: '刷新成功',
+                        duration: '1000',
+                        localtion: 'middle'
+                    });
+                }, 500)
+            }
+
+        }
+
+        // getData()
+        // initSlide();
+    }
+
+
+
+    function lazyload() {
+        var listSkip = $(".selected .recommend").children().length;
+        console.log(listSkip)
+    }
+
+    function random() {
+        $.ajax({
+                url: 'http://112.74.39.180:80/selected',
+                type: 'get',
+                dataType: 'json',
+            })
+            .done(function(res) { //不支持延续任务的调用
+                console.log("Ds" + JSON.stringify(res));
+                console.log(JSON.stringify(res[0]))
+                var len = 4;
+                for (var i = 0; i < len; i++) {//每日精选数据
+                    $(".selected .recommend").append(
+                        `
+                      <div onclick="cli($(this))" class="included">
+                        <div class="">
+                            <img src="${res[i].img}" alt="">
+                        </div>
+                        <span class="content">
+                          <em>
+                          《<span class="interbookname">${res[i].name}</span>》| ${res[i].author}
+                          </em><br/>
+                          <p>${res[i].intro}
+                          </p>
+                        </span>
+                    </div>`
+                    );
+                }
+                for (var n = len; n < res.length; n++) {//轮播图数据
+                    $(".swiper-container .vessel").append(
+                        `
+                      <div onclick="cli($(this))" class="swiper-slide mainCircle1">
+                          <ul>
+                              <li class="hl">
+                                  <span class="text">${res[n].intro}<br/>《<p class="interbookname">${res[n].name}</p>》</span>
+                                  <img src="${res[n].img}" alt="">
+                              </li>
+                          </ul>
+                      </div>`
+                    );
+                }
+                var mySwiper = new Swiper('.swiper-container', {
+                    // direction: 'vertical', // 垂直切换选项
+                    loop: true, // 循环模式选项
+                    autoplay: {
+                        disableOnInteraction: false,
+                    },
+                    // 如果需要前进后退按钮
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    // 如果需要滚动条
+                    scrollbar: {
+                        el: '.swiper-scrollbar',
+                    },
+                    // 如果需要分页器
+                    pagination: ".swiper-pagination",
+                    observer: true, //修改swiper自己或子元素时，自动初始化swiper
+                    observeParents: true, //修改swiper的父元素时，自动初始化swiper
+                    onSlideChangeEnd: function(swiper) {　　　
+                        swiper.update();　　　
+                        mySwiper.startAutoplay();　　
+                        mySwiper.reLoop();
+                    }
+                })
+            })
+            .fail(function(err) {
+                console.log('error' + JSON.stringify(err));
+            });
+    }
+
+    function cli(self){//点击事件，进入到下一个界面
+      console.log(JSON.stringify(self.find(".interbookname").text()));
+      console.log(JSON.stringify(self.find(".interbookname").text()));
+      var bookname = self.find(".interbookname").text();
+      $.ajax({
+        url:'http://112.74.39.180:80/detail',
+        type:'post',
+        dataType:'json',
+        data:{
+          bookname:bookname
+        }
+      })
+      .done(function(ret){
+        console.log(JSON.stringify(ret));
+        console.log(JSON.stringify(ret.type));
+        // var type = ret.type;
+        var retAll = ret;
+        console.log(retAll)
+        // var bookname
+        api.openWin({
+          name:'classify',
+          url:'./classify.html',
+          pageParam:{
+            retAll:retAll,
+          }
+        })
+      })
+      .fail(function(err){
+        console.log(JSON.stringify(err))
+      })
+    }
+
+
+    function openCircle() {
+        var username = $api.getStorage('username') //判断已登陆
+        console.log(username)
+        var apiE = $api.addEvt;
+        apiE($api.dom('.wrap'), 'click', function() {
+            if (username == undefined) {
+                api.toast({
+                    msg: '请先登陆',
+                    duration: '1000',
+                    localtion: 'top'
+                });
+            } else {
+                apiE($api.dom(".mainCircle1 ul .hl"), 'click', function() { //点击轮播打开
+                    if (username !== undefined) {
+                        api.openWin({
+                            name: 'homl1',
+                            url: './homl1.html'
+                        })
+                    } else {
+                        api.toast({
+                            msg: '请先登陆',
+                            duration: '1000',
+                            localtion: 'top'
+                        });
+                    }
+                });
+                apiE($api.dom(".selected .recommend .included div"), 'click', function() { //点击每日精选跳转
+                    api.openWin({
+                        name: 'homl1',
+                        url: './homl1.html'
+                    })
+                });
+                apiE($api.dom(".gather .theBox .chinese"), 'click', function() { //点击中国名著
+                    var text = '中国现代名著';
+                    console.log(text)
+                    api.openWin({
+                        name: 'book',
+                        url: './book.html',
+                        pageParam: {
+                            text: text
+                        }
+                    })
+                });
+                apiE($api.dom(".gather .theBox .child"), 'click', function() { //点击儿童读物
+                    var text = '儿童读物大全';
+                    console.log(text)
+                    api.openWin({
+                        name: 'book',
+                        url: './book.html',
+                        pageParam: {
+                            text: text
+                        }
+                    })
+                });
+                apiE($api.dom(".gather .theBox .country"), 'click', function() { //点击外国名著
+                    var text = '外国文学名著';
+                    console.log(text)
+                    api.openWin({
+                        name: 'book',
+                        url: './book.html',
+                        pageParam: {
+                            text: text
+                        }
+                    })
+                });
+                apiE($api.dom(".gather .theBox .comment"), 'click', function() { //点击热门
+                    var text = '武侠小说';
+                    console.log(text)
+                    api.openWin({
+                        name: 'book',
+                        url: './book.html',
+                        pageParam: {
+                            text: text
+                        }
+                    })
+                })
+                apiE($api.dom(".mainInput .begin_search"), 'click', function() {
+                    api.openWin({
+                        name: 'search',
+                        url: './search.html'
+                    })
+                });
+            }
+        })
+    }
+</script>
+
+</html>

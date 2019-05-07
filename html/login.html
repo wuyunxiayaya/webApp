@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/home/log_on.css">
+
+</head>
+
+<body>
+    <div class="log_on_wrap">
+        <div class="log_on">
+            <img class="back1" src="../image/img/back.png" alt="">
+            <span>注册</span>
+        </div>
+        <div class="tap">
+            <ul class="popup">
+                两次密码不一致
+            </ul>
+        </div>
+        <div class="mainInput">
+            <input id="phone" class="phone_number" type="text" placeholder="请输入手机号">
+            <input id="name" class="user_name" type="text" placeholder="用户名">
+            <!-- <input id="email" class="user_email" type="text" placeholder="邮箱"> -->
+            <input id="passwo" class="passW1" type="password" maxlength="16" placeholder="请输入密码">
+            <input class="passW2" type="password" maxlength="16" placeholder="再次确认密码">
+            <!-- <input class="code" type="text" placeholder="请输入验证码"><span class="get">获取验证码</span> -->
+        </div>
+        <div class="btn">
+            <button class="confirm">确认</button>
+        </div>
+    </div>
+
+
+
+    <div class="login_wrap">
+        <div class="log_on">
+            <img class="back2" src="../image/img/back.png" alt="">
+            <span>登陆</span>
+        </div>
+        <div class="mainInput">
+            <input id="email1" class="user_email" type="text" placeholder="邮箱">
+            <input id="name1" class="user_name" type="text" placeholder="用户名">
+            <input id="password1" class="passW1" type="password" maxlength="16" placeholder="请输入密码">
+        </div>
+        <div class="btn">
+            <button class="login_click">确认</button>
+        </div>
+    </div>
+
+
+
+</body>
+
+<script type="text/javascript" src="../script/api.js">
+</script>
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="../script/SHA1.js"></script>
+<script type="text/javascript">
+    var msg = 0;
+    apiready = function() {
+            params();
+            afters();
+            valueKey();
+            regist();
+            loginA();
+            back();
+            firther();
+            // posta();
+        }
+        // 返回上一级
+    function back() {
+        $api.addEvt($api.dom(".back1"), 'click', function() {
+            api.closeWin({
+                name: 'login'
+            })
+        })
+        $api.addEvt($api.dom(".back2"), 'click', function() {
+            api.closeWin({
+                name: 'login'
+            })
+        })
+    };
+    // 上一级页面传过来
+    function params() { //接收传过来的参数
+        var login = api.pageParam.login; //登陆
+        var registers = api.pageParam.logOn; //注册
+        if (registers == 'logOn') { //注册
+            $api.css($api.dom(".login_wrap"), 'display:none')
+        }
+        if (login == 'login') { //登陆
+            $api.css($api.dom(".log_on_wrap"), 'display:none')
+        };
+    }
+
+    function afters() { //手机号成功失败弹块 登陆＋注册
+        $api.after($api.dom(".mainInput .phone_number"),
+            '<img class="error" src="../image/img/cuowu.png" alt="" /><img class="seccess" src="../image/img/zhengque1.png" alt="" />')
+    }
+
+    function firther() { //正则  验证手机号  错误弹出错误符号 正确弹出正确符号    登陆＋注册
+        $api.addEvt($api.dom(".mainInput .phone_number"), 'blur', function() {
+            var mobile = $api.val($api.dom(".mainInput .phone_number"));
+            console.log(mobile);
+            if (!(/^1[34578]\d{9}$/.test(mobile))) {
+                $api.css($api.dom(".mainInput .error"), 'display:block');
+                $api.css($api.dom(".mainInput .seccess"), 'display:none');
+                // alert('手机号格式错误');
+            } else {
+                $api.css($api.dom(".mainInput .seccess"), 'display:block');
+                $api.css($api.dom(".mainInput .error"), 'display:none');
+            }
+        });
+    };
+
+
+    function valueKey() { //两次密码不一样弹出报错块    //注册
+        $api.addEvt($api.dom(".mainInput .passW2"), 'blur', function() {
+            if ($api.val($api.dom(".mainInput .passW1")) !== $api.val($api.dom(".mainInput .passW2"))) {
+                // $api.css($api.dom(".tap .popup"),'display:inline-block')
+                $api.addCls($api.dom(".tap .popup"), 'addPopup');
+            } else if ($api.val($api.dom(".mainInput .passW1")) == $api.val($api.dom(".mainInput .passW2"))) {
+                $api.removeCls($api.dom(".tap .popup"), 'addPopup');
+            }
+        });
+        $api.addEvt($api.dom(".mainInput .passW1"), 'blur', function() { //密码框失去焦点
+            if ($api.val($api.dom(".mainInput .passW1")) !== $api.val($api.dom(".mainInput .passW2")) && $api.val($api.dom(".mainInput .passW2")) !== '') {
+                $api.addCls($api.dom(".tap .popup"), 'addPopup');
+            } else {
+                $api.removeCls($api.dom(".tap .popup"), 'addPopup');
+            }
+        })
+    };
+    var checkObj = {
+      phone:false,
+      name:false
+    }
+
+    function regist() { //注册
+
+      $api.addEvt($api.dom(".mainInput .phone_number"), 'blur', function() {//手机号失去焦点
+        console.log('aa')
+        var userphone = $api.byId('phone');
+        var phoneValue = $api.val(userphone);
+        if(phoneValue == '') return;
+        $.ajax({
+          url:'http://112.74.39.180:80/checkReg',
+          type:'post',
+          dataType:'json',
+          data:{
+            "value":phoneValue
+          }
+        })
+        .done(function(ret){
+          console.log(JSON.stringify(ret))
+          if(ret.status == 0){
+            checkObj.phone = false;
+            api.toast({
+                msg: '手机号已被占用',
+                duration: '3000',
+                localtion: 'top'
+            });
+          }else{
+            checkObj.phone = true;
+          }
+        })
+        .fail(function(err){
+          console.log(JSON.stringify(err))
+        })
+      })
+
+      $api.addEvt($api.dom(".mainInput .user_name"), 'blur', function () {//用户名失去焦点
+        console.log('aa')
+        var username = $api.byId('name');
+        var usernameValue = $api.val(username);
+        if(usernameValue == '') return;
+        $.ajax({
+          url:'http://112.74.39.180:80/checkReg',
+          type:'post',
+          dataType:'json',
+          data:{
+            "value":usernameValue
+          }
+        })
+        .done(function(ret){
+          console.log(JSON.stringify(ret))
+          if(ret.status == 0){
+            checkObj.name = false;
+            api.toast({
+                msg: '用户名已被占用',
+                duration: '3000',
+                localtion: 'top'
+            });
+          }else{
+            checkObj.name = true;
+          }
+        })
+        .fail(function(err){
+          console.log(JSON.stringify(err));
+        })
+      })
+
+              // register(phoneValue, usernameValue, passwordValue);
+
+      $api.addEvt($api.dom(".btn .confirm"), 'click', function() {//点击确认按钮
+        if(checkObj.phone == true && checkObj.name == true){//名字，手机不被占用
+          var username = $api.byId('name');
+          var usernameValue = $api.val(username);
+          // 错误提示消失且用户名不为空
+          if ($api.cssVal($api.dom(".mainInput .error"), 'display') == 'none' && usernameValue !== '') {
+          var userphone = $api.byId('phone');
+          // var username = $api.byId('name');
+          var email = $api.byId('email');
+          var password = $api.byId('passwo');
+          var phoneValue = $api.val(userphone);
+          // var usernameValue = $api.val(username);
+          var emailValue = $api.val(email);
+          var passwordValue = $api.val(password);
+          console.log(password)
+          $.ajax({
+            url:'http://112.74.39.180:80/reg',
+            type:'post',
+            dataType:'json',
+            data:{
+              "name":usernameValue,
+              "password":passwordValue,
+              "phone":phoneValue
+            }
+            })
+            .done(function(ret){
+              console.log(JSON.stringify(ret))
+              if(ret.status == 0){
+                api.toast({
+                    msg: '注册失败',
+                    duration: '3000',
+                    localtion: 'top'
+                });
+              }else{
+                $(".log_on_wrap").css({'display':'none'})//注册消失
+                $(".login_wrap").css({'display':'block'})//登陆出现
+              }
+            })
+            .fail(function(err){
+              console.log(err)
+            })
+          }else{
+            api.toast({
+                msg: '用户信息错误',
+                duration: '3000',
+                localtion: 'top'
+            });
+          }
+        }else{
+          api.toast({
+              msg: '用户信息错误',
+              duration: '3000',
+              localtion: 'top'
+          });
+        }
+      });
+        // firther();//验证手机号  错误弹出错误符号 正确弹出正确符号
+        // console.log(msg)
+        // $api.addEvt($api.dom(".btn .confirm"), 'click', function() {
+        //     var userphone = $api.byId('phone');
+        //     var username = $api.byId('name');
+        //     var email = $api.byId('email');
+        //     var password = $api.byId('passwo');
+        //     var phoneValue = $api.val(userphone);
+        //     var usernameValue = $api.val(username);
+        //     var emailValue = $api.val(email);
+        //     var passwordValue = $api.val(password);
+        //     if ($api.removeCls($api.dom(".tap .popup"), 'addPopup') && $api.val($api.dom(".mainInput .passW2")) !== '' && msg == 1 && $api.val($api.dom(".mainInput .code")) !== '') {
+        //         register(phoneValue, usernameValue, passwordValue);
+        //     } else {
+        //         alert('信息输入不正确');
+        //     }
+        // });
+        //
+        // function posta() {
+        //     $api.addEvt($api.dom(".get"), 'click', function() {
+        //         var userphone = $api.byId('phone');
+        //         var username = $api.byId('name');
+        //         var email = $api.byId('email');
+        //         var password = $api.byId('passwo');
+        //         var phoneValue = $api.val(userphone);
+        //         var usernameValue = $api.val(username);
+        //         var emailValue = $api.val(email);
+        //         var passwordValue = $api.val(password);
+        //         emaila(emailValue);
+        //     })
+        // }
+        // posta();
+    };
+    // 登陆
+    function loginA() {
+        $api.addEvt($api.dom(".btn .login_click"), 'click', function() {
+          var userphone = $api.byId('name1');
+          var password = $api.byId('password1');
+          var phoneValue = $api.val(userphone);
+          var passwordValue = $api.val(password);
+          console.log(phoneValue)
+          console.log(passwordValue)
+            // login(usernameValue, passwordValue);
+            $.ajax({
+              url:'http://112.74.39.180:80/login',
+              type:'post',
+              dataType:'json',
+              data:{
+                "phone":phoneValue,
+                "password":passwordValue
+              }
+            })
+            .done(function(ret){
+              console.log(JSON.stringify(ret));
+              if(ret.status == 0){
+                api.toast({
+                    msg: '登陆失败',
+                    duration: '3000',
+                    localtion: 'top'
+                });
+              }
+              if(ret.status == -2){
+                api.toast({
+                    msg: '密码错误',
+                    duration: '3000',
+                    localtion: 'top'
+                });
+              }else if(ret.status == -1){
+                api.toast({
+                    msg: '用户名不存在',
+                    duration: '3000',
+                    localtion: 'top'
+                });
+              }else{
+                $api.setStorage('username', ret.uname);
+                $api.setStorage('uid', ret.uid);
+                $api.setStorage('exit', "exit");
+                $api.setStorage('userImage', ret.img);
+                api.openWin({
+                  name: "index",
+                  url: "../index.html",
+                  // name: "frame3",
+                  // url: "./frame3.html",
+                  pageParam: {
+                      // exit: exit,
+                      // name: uname,
+                      // num: num,
+                      // image:image
+                  }
+                });
+                // $('#name1').val('');
+                $('#password1').val('');
+              }
+
+            })
+            .fail(function(err){
+              console.log(JSON.stringify(err))
+            })
+        })
+    }
+    // // 初始化
+    // function initConfig() {
+    //     var model = api.require('model')
+    //     model.config({
+    //         appId: 'A6007193486393',
+    //         appKey: '6AC0DC07-3FF1-FA88-F56D-CF7BC56F280E',
+    //         host: 'https://d.apicloud.com'
+    //     })
+    //     return model;
+    // }
+
+    //注册
+    // function register(phone, username, password) {
+    //     // var date = new Date()
+    //     var now = Date.now();
+    //     console.log(now)
+    //     var appKey = SHA1("A6007193486393" + "UZ" + "6AC0DC07-3FF1-FA88-F56D-CF7BC56F280E" + "UZ" + now) + "." + now
+    //     $.ajax({
+    //         "url": "https://d.apicloud.com/mcm/api/user/",
+    //         "type": "POST",
+    //         "cache": false,
+    //         "headers": {
+    //             "X-APICloud-AppId": "A6007193486393",
+    //             "X-APICloud-AppKey": appKey
+    //         },
+    //         "data": {
+    //             "username": username,
+    //             "password": password,
+    //             // "email":email,
+    //             'mobile': phone
+    //         }
+    //     }).done(function(data, status, header) {
+    //         //success body
+    //         console.log(JSON.stringify(data));
+    //         console.log(JSON.stringify(status));
+    //         console.log(JSON.stringify(header));
+    //     }).fail(function(header, status, errorThrown) {
+    //         //fail body
+    //         console.log(JSON.stringify(header) + '111')
+    //     })
+    // }
+    // 登陆
+    // function login(username, password) {
+    //     console.log(username)
+    //     var now = Date.now();
+    //     var appKey = SHA1("A6007193486393" + "UZ" + "6AC0DC07-3FF1-FA88-F56D-CF7BC56F280E" + "UZ" + now) + "." + now
+    //     $.ajax({
+    //         "url": "https://d.apicloud.com/mcm/api/user/login",
+    //         "type": "POST",
+    //         "cache": false,
+    //         "headers": {
+    //             "X-APICloud-AppId": "A6007193486393",
+    //             "X-APICloud-AppKey": appKey
+    //         },
+    //         "data": {
+    //             'username': username,
+    //             'password': password
+    //         }
+    //     }).done(function(data, status, header) {
+    //       console.log(JSON.stringify(data))
+    //       console.log(JSON.stringify(status))
+    //       console.log(JSON.stringify(header))
+    //       var userId = header.responseJSON.userId;
+    //       var loginId = header.responseJSON.id;
+    //       $api.setStorage('userid', userId);
+    //       $api.setStorage('id',loginId)
+    //       var url = 'https://d.apicloud.com/mcm/api/user/'+userId;
+    //         //success body
+    //         $.ajax({
+    //             "url": url,
+    //             "type": "GET",
+    //             "cache": false,
+    //             "headers": {
+    //                 "X-APICloud-AppId": "A6007193486393",
+    //                 "X-APICloud-AppKey": appKey
+    //             }
+    //         }).done(function(data, status, header) {
+    //             //success body
+    //             console.log(JSON.stringify(data))
+    //             console.log(JSON.stringify(status))
+    //             console.log(JSON.stringify(header))
+    //             var image = header.responseJSON.img;
+    //             console.log(image)
+    //             var exit = 'exit';
+    //             var name = username;
+    //             var num = '1';
+    //             $api.setStorage('exit',exit)
+    //             $api.setStorage('username',name)
+    //             $api.setStorage('readTime','24')
+    //             $api.setStorage('userGold','9999')
+    //             $api.setStorage('userImage',image)
+    //             api.openWin({
+    //                 name: "index",
+    //                 url: "../index.html",
+    //                 // name: "frame3",
+    //                 // url: "./frame3.html",
+    //
+    //                 pageParam: {
+    //                     exit: exit,
+    //                     name: name,
+    //                     num: num,
+    //                     image:image
+    //                 }
+    //
+    //             })
+    //         }).fail(function(header, status, errorThrown) {
+    //             //fail body
+    //         })
+    //         // console.log(JSON.stringify(data))
+    //         // console.log(JSON.stringify(status))
+    //         // console.log(JSON.stringify(header))
+    //         console.log(JSON.stringify(header.responseJSON.userId))
+    //         // var exit = 'exit';
+    //         // var name = username;
+    //         // var num = '1';
+    //         // api.openWin({
+    //         //     name: "frame3",
+    //         //     url: "./frame3.html",
+    //         //     pageParam: {
+    //         //         exit: exit,
+    //         //         name: name,
+    //         //         num: num
+    //         //     }
+    //         //
+    //         // })
+    //     }).fail(function(header, status, errorThrown) {
+    //         //fail body
+    //         console.log(JSON.stringify(header) + '111222')
+    //     })
+    // }
+
+    // // 邮箱验证
+    // function emaila(){
+    //   var now = Date.now();
+    //   var appKey = SHA1("A6007193486393"+"UZ"+"6AC0DC07-3FF1-FA88-F56D-CF7BC56F280E"+"UZ"+now)+"."+now;
+    //   $.ajax({
+    //         "url": "https://d.apicloud.com/mcm/api/user/verifyEmail",
+    //         "type": "POST",
+    //         "cache": false,
+    //         "headers": {
+    //           "X-APICloud-AppId": "A6007193486393",
+    //           "X-APICloud-AppKey": appKey
+    //         },
+    //         "data": {
+    //           "username":'我地理',
+    //           "email":'130970183@qq.com',
+    //           "language":"zh_CN"
+    //       }
+    //   }).done(function (data, status, header) {
+    //         //success body
+    //         console.log(JSON.stringify(data))
+    //   }).fail(function (header, status, errorThrown) {
+    //         //fail body
+    //         console.log(JSON.stringify(header)+'0000')
+    //   })
+    // }
+
+
+
+    // // 注册模块
+    // function register(phone,name,email,password){
+    //   initConfig()
+    //   var user = api.require('user');
+    //   user.register({
+    //       phone:phone,
+    //       username: name,
+    //       email: email,
+    //       password: password
+    //   }, function( ret, err ) {
+    //     console.log(JSON.stringify( ret.status))
+    //       if( ret ){
+    //             // alert('注册成功')
+    //
+    //
+    //           console.log(JSON.stringify( ret))
+    //       }else{
+    //           // alert( JSON.stringify( err) );
+    //           alert('注册失败')
+    //       }
+    //   });
+    // }
+
+    // // 登陆模块
+    // function login(name,phone,password){
+    //   var model = initConfig();
+    //   var query = api.require('query');
+    //   query.createQuery(function(ret,err){
+    //     console.log(JSON.stringify(ret))
+    //     if(ret){
+    //       var queryId = ret.qid;
+    //       query.whereEqual({
+    //         qid:queryId,
+    //         // column:'uphone',
+    //         class:'users',
+    //         value:{
+    //           phone:phone,
+    //           name:'uname'
+    //         }
+    //       })
+    //       model.findAll({
+    //         qid:queryId,
+    //         class:'users'
+    //       },function(ret,err){
+    //         var self = this;
+    //         console.log(JSON.stringify(self.ret))
+    //         console.log(JSON.stringify(this))
+    //         console.log(JSON.stringify(ret[0]))
+    //         var length = ret.length;
+    //         console.log(length)
+    //         if(ret[0]){
+    //           console.log(JSON.stringify(name))
+    //           console.log(JSON.stringify(ret[0].uname))
+    //           if(ret[0].upassword==password){
+    //             var exit = 'exit';
+    //             var name = ret[0].uname;
+    //             var num = '1';
+    //             // console.log(name);
+    //             api.openWin({
+    //               name:'frame3',
+    //               url:'./frame3.html',
+    //               pageParam:{
+    //                 exit:exit,
+    //                 name:name,
+    //                 num:num
+    //               }
+    //             })
+    //           }else{
+    //             // 密码错误代码
+    //             alert('密码错误')
+    //           }
+    //         }else{
+    //           // 账号错误代码
+    //           console.log('aaa')
+    //           alert('账号错误')
+    //           console.log(err)
+    //         }
+    //       console.log(JSON.stringify(ret));
+    //       })
+    //     }
+    //   })
+    // }
+
+    // // 登陆
+    // function login(email,username,password){
+    // var model = initConfig();
+    //   var user = api.require('user');
+    //   var query = api.require('query');
+    //   query.createQuery(function(ret,err){
+    //     if(ret){
+    //       var queryId = ret.qid;
+    //       query.whereEqual({
+    //         qid: queryId,
+    //         column: 'email',
+    //         value: email
+    //       });
+    //   model.findAll({
+    //     qid:queryId,
+    //     class:"user"
+    //   },function(ret,err){
+    //     if(ret){
+    //       user.login({
+    //         email:email,
+    //         password: password,
+    //         username:username
+    //         // email: email
+    //       }, function( ret, err ) {
+    //         console.log( JSON.stringify( ret))
+    //            if( ret ){
+    //              console.log( JSON.stringify( ret))
+    //               alert( JSON.stringify( ret) );
+    //               console.log(JSON.stringify( ret.username))
+    //               var exit = 'exit';
+    //               var name = ret[0].username;
+    //               var num = '1';
+    //               api.openWin({
+    //                 name:'frame3',
+    //                 url:'./frame3.html'
+    //               })
+    //            }else{
+    //               alert( JSON.stringify( err) );
+    //                console.log( JSON.stringify( err))
+    //            }
+    //       });
+    //     }else{
+    //       console.log(JSON.stringify(err) + '111')
+    //     }
+    //   })
+    // }else{
+    //   console.log(JSON.stringify(err))
+    // }
+    //   })
+    //
+    // }
+
+
+
+
+
+    // // 注销模块
+    // function register(name,password,phone){
+    //   var model = initConfig();
+    //   var query = api.require('query');
+    //   query.createQuery(function(ret,err){
+    //     var queryId = ret.qid;
+    //     query.whereEqual({
+    //       qid:queryId,
+    //       column:'uphone',
+    //       value:phone
+    //     });
+    //     model.findAll({
+    //       qid:queryId,
+    //       class:'users'
+    //     },function(ret,err){
+    //       console.log(JSON.stringify(ret[0]))
+    //       if(ret[0]){
+    //         console.log(name)
+    //         model.deleteAll({
+    //           qid:queryId,
+    //           class:'users'
+    //         },function(ret,err){
+    //           console.log(JSON.stringify(ret[0]))
+    //           if(ret[0]){
+    //             console.log(name)
+    //           }else{
+    //             console.log('aaaq')
+    //           }
+    //         })
+    //       }else{
+    //         alert('cuowu')
+    //       }
+    //     })
+    //   })
+    // }
+</script>
+
+</html>

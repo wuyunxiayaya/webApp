@@ -1,0 +1,308 @@
+/*.wrap{
+  height:160px;
+  background-color:#fd0;
+  width:100%;
+}*/
+/*背景颜色*/
+.wrap{
+  background-color:#eed;
+}
+/*头部导条的设置*/
+.topPrepare{
+  height:30px;
+  background-color:rgba(12,223,000,0.2);
+  line-height:30px;
+}
+.topPrepare ul{
+  margin-left:10px;
+  display:inline-block;
+}
+.topPrepare ul img{
+  height:25px;
+  display:inline-block;
+}
+.topPrepare .quote{
+  color:#f60;
+  float:right;
+}
+/*搜索框*/
+.mainInput{
+  display:table;
+  box-shadow:1px 2px 5px #fff;
+  background-color:#fff;
+  height:45px;
+  width:100%;
+  text-align:center;
+  line-height:45px;
+  /*border:1px solid black;*/
+}
+
+.mainInput input{
+  background-image:url('../../image/img/sousuo.png');
+  background-size:20px;
+  background-repeat:no-repeat;
+  padding-left:25px;
+  background-position:left;
+  width:80%;
+  height:30px;
+  background-color:#eae6e6;
+  border-radius:3px;
+  outline:none;
+}
+.mainInput button{
+  /*font-weight:bold;*/
+  background-color:#ffd;
+  outline:none;
+}
+.mainInput .back{
+  float:left;
+}
+.mainInput .back img{
+  /*display:inline;*/
+  height:20px;
+  vertical-align:middle;
+}
+/*轮播图样式*/
+.swipe-wrapper{
+  position:relative;
+  height:100px;
+  width:180;
+  /*border:1px solid red;*/
+  /*white-space:nowrap;
+  overflow:hidden;*/
+}
+.swiper-container .vessel div{
+  /*position:absolute;*/
+  display:inline-block;
+  background:linear-gradient(to right,rgba(122,232,90,0.5),rgba(221,200,211,0.2));
+  /*margin-top:7px;*/
+  border-radius:3px;
+  overflow:hidden;
+  box-shadow:2px 1px 1px;
+  /*text-overflow:ellipsis;*/
+  height:180px;
+  width:100%;
+  /*background-color:#f90;*/
+}
+.swiper-container .vessel div:nth-child(2){
+
+  background:linear-gradient(to right,rgba(12,132,120,0.2),rgba(222,12,190,0.5));
+      /*background-color:#98fd98;*/
+}
+.swiper-container .vessel div:nth-child(3){
+  background:linear-gradient(to right,rgba(12,12,120,0.2),rgba(22,12,190,0.3));
+  /*background-color:#999;*/
+}
+.swiper-container .vessel div:nth-child(4){
+  background:linear-gradient(to right,rgba(11,32,90,0.2),rgba(200,122,90,0.5));
+}
+.mainCircle1 ul li .text,.mainCircle2 ul li .text,.mainCircle3 ul li .text,.mainCircle4 ul li .text{
+  display:inline-block;
+  white-space:normal;
+  text-shadow:2px 2px 2px #ff0;
+  /*border:1px solid black;*/
+  margin-top:15px;
+  height:120px;
+  width:50%;
+  font-size:23px;
+  font-weight:bold;
+  overflow: hidden;
+}
+.mainCircle2 ul li .text{
+  text-shadow:1px 2px 2px #dd0;
+  width:60%;
+}
+.mainCircle3 ul li .text{
+  text-shadow:1px 2px 2px #98fd98;
+  width:56%;
+}
+.mainCircle4 ul li .text{
+  text-shadow:1px 2px 2px #98fd98;
+  width:55%;
+}
+.mainCircle1 ul li .text p,.mainCircle2 ul li .text p,.mainCircle3 ul li .text p,.mainCircle4 ul li .text p{
+  font-size:18px;
+}
+.mainCircle1 img,.mainCircle2 img,.mainCircle4 img{
+  max-height:100px;
+  margin-top:15px;
+  vertical-align:top;
+
+}
+.mainCircle3 img{
+  max-height:80px;
+  margin-top:15px;
+  vertical-align:top;
+}
+/*推荐栏*/
+.selected{
+  position:relative;
+  margin-top:10px;
+  /*border:1px solid black;*/
+}
+.selected .titled{
+
+  /*border:1px solid red;*/
+  /*background-color:#fff;*/
+  height:45px;
+  width:100%;
+  line-height:48px;
+}
+.selected .titled span{
+  font-weight:bold;
+  margin-left:10px;
+}
+.selected .titled .line{
+  position:absolute;
+  top:12px;
+  left:5px;
+  display:inline-block;
+  /*margin-left:5px;*/
+  /*margin-top:50%;*/
+  height:24px;
+  width:3px;
+  background-color:red;
+}
+.selected .recommend{
+  /*border:1px solid red;*/
+  width:100%;
+  /*margin-top:10px;*/
+  /*text-align:center;*/
+}
+.selected .recommend .included{
+  margin:0 auto;
+  /*vertical-align:middle;*/
+  /*border:1px solid red;*/
+  margin-top:10px;
+  /*line-height:100px;*/
+  display:flex;
+  /*justify-content: center;*/
+  align-items: center;
+  height:100px;
+  width:90%;
+  background-color:#fff;
+  text-align:center;
+}
+.selected .recommend .included div{
+  display:inline-block;
+  /*border:1px solid black;*/
+  width:40%;
+  float:left;
+}
+.selected .recommend .included div img{
+  display:inline-block;
+  max-height:80px;
+  vertical-align:top;
+  margin-left:10px;
+}
+
+.selected .recommend .included>span{
+
+  display:inline-block;
+  width:65%;
+  height:80%;
+  float:right;
+  /*border:1px solid black;*/
+  overflow: hidden;
+  /*font-size:bold;*/
+}
+/*.selected .recommend .included .content*/
+.selected .recommend .included span p{
+  width:100%;
+  height:80%;
+  /*border:1px solid black;*/
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.selected .recommend .included span em{
+  font-weight:bold;
+  width:100%;
+  /*border:1px solid red;*/
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+/*分类*/
+.gather{
+  margin-top:10px;
+  background-color:#fff;
+  width:100%;
+  height:280px;
+  text-align:center;
+}
+.gather .box{
+  margin-top:20px;
+  display:inline-block;
+  /*border:1px solid black;*/
+  /*background-color:#ddd;*/
+  width:90%;
+  height:100%;
+  text-align:center;
+}
+
+.gather .theBox{
+  display:inline-block;
+  background-color:#fff;
+  /*background-color:#ddd;*/
+  /*border:1px solid black;*/
+  text-align:center;
+  width:45%;
+  height:50%;
+  /*margin-left:8px;*/
+  /*text-align: center;*/
+}
+.gather .theBox .title{
+  margin-top:20px;
+  /*float:left;*/
+}
+.gather .theBox .contentd{
+  display:inline-block;
+  margin-top:10px;
+  /*float:left;*/
+  height:40%;
+  width:90%;
+  background-color:#f90;
+  font-style:oblique;
+  font-weight:bolder;
+  font-size:30px;
+  text-align:center;
+  line-height:55px;
+  /*vertical-align:middle;*/
+  color:#195092;
+  background-color:#b5aba5;
+}
+.gather .theBox  .chinese{
+  /*background-color:#f3e6e6;
+  box-shadow: 2px 1px 2px #ddd;*/
+}
+.gather .theBox  .chinese img,.gather .theBox .child img,.gather .theBox .country img{
+  margin-top:6px;
+  max-height:40px;
+  float:left;
+}
+.gather .theBox .comment img{
+  display:inline-block;
+  max-height:38px;
+  margin-left:12px;
+  /*margin-right:-91px;*/
+}
+.gather .theBox .comment .img{
+  position:absolute;
+  right:0px;
+}
+.gather .theBox .comment{
+  position:relative;
+  /*border:1px solid black;*/
+  /*background-color:#9fadef;*/
+}
+.gather .theBox .child{
+  background-color:#96ab93;
+  /*color:#fff;*/
+}
+.gather .theBox .country{
+  background-color:#96ab93;
+}
+.gather .theBox .title img{
+  vertical-align:bottom;
+  max-height:20px;
+}

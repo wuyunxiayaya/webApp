@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/home/classify.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="vessel">
+        <header style="position:fixed;top:0px;width:100%;font-size:21px;color:#f50;height:50px;background-color:#dde;text-align:center;line-height:50px;padding-top:20px;">书名</header>
+
+        <div style="position:fixed;top:0px;line-height:100px;" class="back">
+            <img src="../image/img/back.png" alt=""><span></span>
+        </div>
+        <div class="recommend">
+
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js">
+</script>
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script>
+    apiready = function() {
+        bookQuery();
+        // console.log(retAll)
+        api.sendEvent({
+            name: 'myEvent',
+            extra: {
+                state: 'no'
+            }
+        });
+        close();
+        api.addEventListener({
+            name: 'keyback'
+        }, function(ret, err) {
+          api.closeWin({
+              name: 'classify'
+          })
+          api.sendEvent({
+              name: 'collectRefresh',
+              extra: {
+                  key1: 1,
+              }
+          });
+        });
+
+    }
+
+    function close() {
+        $api.addEvt($api.dom(".back img"), 'click', function() {
+            api.closeWin({
+                name: 'classify'
+            })
+            api.sendEvent({
+                name: 'collectRefresh',
+                extra: {
+                    key1: 1,
+                }
+            });
+        })
+    }
+
+
+    function bookQuery() {
+      $.ajax({
+        url:'',
+        type:'post',
+        dataType:'json',
+        data:{
+
+        }
+      })
+        var retAll = api.pageParam.retAll;
+        // console.log(retAll.data[0])
+        console.log(retAll.data)
+        console.log(retAll.type)
+        var book = retAll.data[0].name.toString()
+        console.log(book)
+        console.log(typeof(book))
+        if (retAll.type == 'book') { //没有小分类
+            console.log(retAll.data[0].id) //书本id
+            var smollId = retAll.data[0].id;
+            // clickList(retAll.data[0].name)
+            $(".recommend").append(
+                `<div data-id="${smollId}" onclick='clickSmoll($(this))' class="included"><div>
+      <img src="${retAll.data[0].img}"
+     alt="" /></div><span><em>
+      《<span class="bookn">${retAll.data[0].name}</span>》| ${retAll.data[0].author}
+   </em><br /><p>${retAll.data[0].intro}</p></span></div>`
+            );
+        } else {
+            var len = retAll.data.length;
+            console.log(retAll.data.length)
+            console.log(len)
+            for (var i = 0; i < len; i++) { //有小分类
+                var name = retAll.data[i].name;
+                var index = $(this).index();
+                // console.log(index)
+                // clickList(name)
+                console.log(name)
+                $(".recommend").append(
+                    `<div data-id="${retAll.data[i].id}" tapmode onclick='clickList($(this))' class="included"><div>
+       <img src="${retAll.data[i].img}"
+      alt="" /></div><span><em>
+       《<span class="bookn">${retAll.data[i].name}</span>》| ${retAll.data[i].author}
+    </em><br /><p>${retAll.data[i].intro}</p></span></div>`
+                );
+            }
+        }
+    }
+
+    function clickSmoll(self) {
+        console.log(JSON.stringify(self));
+        var bookn = self.find(".bookn").text();
+        $api.setStorage('theBook', bookn);
+        console.log(bookn)
+
+        var id = self.attr("data-id");
+        $api.setStorage('theId', id);
+        console.log(id)
+        var img = self.children("img").attr("src");
+        var intro = self.children("p").text();
+        console.log(img)
+        console.log(intro)
+        alert(id)
+        api.openWin({
+            name: 'details',
+            url: './details.html',
+            pageParam: {
+                id: id,
+                img: img,
+                intro: intro,
+            }
+        });
+        api.sendEvent({
+            name: 'brieft',
+            extra: {
+                key1: 'value1',
+                key2: 'value2'
+            }
+        });
+    }
+
+    function clickList(self) {
+      var bookn = self.find(".bookn").text();
+      $api.setStorage('theBook', bookn);
+      console.log(bookn)
+        console.log(JSON.stringify(self.attr("data-id")))
+        console.log(self)
+        var id = self.attr("data-id");
+        $api.setStorage('theId', id);
+        var img = self.children("img").attr("src");
+        var intro = self.children("p").text();
+        console.log(img)
+        alert(id)
+        console.log(intro)
+        api.openWin({
+            name: 'details',
+            url: './details.html',
+            pageParam: {
+                id: id,
+                img: img,
+                intro: intro
+            }
+        });
+        api.sendEvent({
+            name: 'brieft',
+            extra: {
+                key1: 'value1',
+                key2: 'value2'
+            }
+        });
+
+    }
+</script>
+
+</html>

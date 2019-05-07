@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>个人中心</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/home/frame3.css">
+</head>
+
+<body>
+    <div class="empty">
+        <!-- 个人信息 -->
+        <div class="personData">
+
+            <div class="portrait" onclick="showAction()">
+                <img src="../image/img/hl.jpg" class="img_tx" id="img_tx" alt="">
+            </div>
+            <span class="user_name">asdasd</span>
+
+            <div style="display:inline-block" class="log_area">
+                <div class="log_on">注册 |</div>
+                <div class="personName">
+                    登陆
+                </div>
+            </div>
+
+
+        </div>
+        <!-- 足迹 今日已读 -->
+        <div class="wrap">
+            <div class="content">
+                <div class="foot"><img src="../image/img/jiaoya.png" alt="">足迹</div>
+                <div class="today"><img src="../image/img/xshu.png" alt="">今日已读<br/>
+                    <!-- <span>*本</span> -->
+                </div>
+            </div>
+        </div>
+        <!-- 阅读时长 -->
+        <div class="timer">
+            <img src="../image/img/nb-.png" alt="">
+            <span class="text">阅读时长：<text class="allTime">
+              <!-- <i class="second"></i>秒</text><text class="allTime"><i class="minute"></i>分</text><text class="allTime"><i class="clock"></i>时</text> -->
+            </span>
+        </div>
+        <!-- 收藏等分块 -->
+        <div class="free">
+            <div class="in_free">
+                <div class="all">
+                    <div class="collect">
+                        <img src="../image/img/shoucang.png" alt=""> 收藏
+                    </div>
+                </div>
+                <div class="all">
+                    <div class="account">
+                        <img src="../image/img/zhanghu.png" alt=""> 账户
+                        <span>0.00金币</span>
+                    </div>
+                </div>
+                <div class="all">
+                    <div class="gold">
+                        <img src="../image/img/qian2.png" alt=""> 读书金币
+                        <span>0金币</span>
+                    </div>
+                </div>
+                <div class="all">
+                    <div class="sign">
+                        <img src="../image/img/icon.png" alt=""> 签到
+                        <span>0.00金币</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 我的社区 -->
+        <div class="community">
+            我的社区
+            <img src="../image/img/xiaoxi.png" alt="">
+        </div>
+        <!-- 退出登陆 -->
+        <div class="quit">
+            <button class="login">退出登陆</button>
+            <button class="log">登陆</button>
+        </div>
+    </div>
+    <div class="img"><img src="" alt=""></div>
+</body>
+<script type="text/javascript" src="../script/api.js">
+</script>
+<script src="../script/SHA1.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script>
+    apiready = function() {
+        open();
+        showA();
+        loginout();
+    }
+
+    // 点击进入下一级界面
+    function open() {
+        $api.addEvt($api.dom(".personData .log_on"), 'click', function() { //点注册按钮
+            function regist() {
+                var logOn = 'logOn';
+                api.openWin({ //打开注册界面
+                    name: 'login', //必须有name
+                    url: './login.html', //打开的地址
+                    pageParam: {
+                        logOn: logOn
+                    } //传递参数 给注册界面
+                });
+            };
+            regist();
+        });
+        $api.addEvt($api.dom(".personData .personName"), 'click', function() { //点击登陆
+            function nextLogin() {
+                var login = 'login';
+                api.openWin({
+                        name: 'login',
+                        url: './login.html',
+                        pageParam: { //传递参数给登陆界面
+                            login: login
+                        }
+                    })
+                    // api.closeWin({
+                    //   name:'login'
+                    // })
+            };
+            nextLogin();
+        });
+        var username = $api.getStorage('username')//判断已登陆
+        if(username !== undefined){
+
+        $api.addEvt($api.dom(".empty .wrap .content .foot"), 'click', function() { //点击足迹
+            api.openWin({ //打开足迹
+                name: 'foot',
+                url: './foot.html'
+                    // name: 'login_frame',
+                    // url: './login_frame.html'
+            })
+        });
+        $api.addEvt($api.dom(".free .in_free .all .collect"), 'click', function() { //点击收藏按钮
+            api.openWin({ //打开收藏界面
+                name: 'collect',
+                url: './collect.html'
+            })
+        });
+        $api.addEvt($api.dom(".community"), 'click', function() { //点击社区
+            api.openWin({
+                name: 'community',
+                url: './community.html'
+            })
+        });
+      }else{
+        api.toast({
+            msg: '请先登陆',
+            duration: '1000',
+            localtion: 'top'
+        });
+      }
+    }
+    // 接收登陆页面的参数
+    function showA() {
+        var exit = $api.getStorage('exit')//判断已登陆
+        var username = $api.getStorage('username')//获取用户名··
+        console.log(exit)
+        console.log(username)
+        // console.log(readTime)
+        // console.log(userGold)
+        console.log(userImage)
+        if (exit == "exitback") {//如果退出状态
+            // $(".quit .login").show().siblings().hide();
+            $(".log_area").show()
+            $(".personData .user_name").text("").hide();
+            // $(".personData .user_name").hide()
+            $(".img_tx").attr('src', '../image/img/hl.jpg');
+            $(".allTime").text('小时')
+            $(".account span").text(0.00)
+            $(".quit .log").addClass('active').siblings("button").removeClass('active');
+
+        }
+        if (exit == "exit") {//如果登陆状态
+          var userImage = $api.getStorage('userImage')//获取本地头像··
+            var username = $api.getStorage('username')
+            // var readTime = $api.getStorage('readTime')
+            // var userGold = $api.getStorage('userGold')
+            console.log(userImage)
+            console.log(username)
+            $(".log_area").hide()
+            $(".personData .user_name").show()
+            $(".personData .user_name").text('用户名:' + username);
+            if(userImage !== null){
+              $(".img_tx").attr('src', userImage);
+            }
+            // $(".allTime").text(readTime + '小时')
+            // $(".account span").text(userGold)
+            $(".quit .login").addClass('active').siblings("button").removeClass('active');
+            $(".quit .log").hide();
+            // $(".img_tx").attr('src',userImage);
+        }
+        // var exit = api.pageParam.exit; //登陆页面的参数
+        // var name = api.pageParam.name;
+        // var num = api.pageParam.num;
+        // var image = api.pageParam.image;
+        // // console.log(name)
+        // console.log(image)
+        // if (exit == 'exit') { //登陆以后
+        //     $api.css($api.dom(".quit .login"), 'display:inline-block'); //退出登陆按钮出现
+        //     $api.css($api.dom(".quit .log"), 'display:none'); //登陆按钮消失
+        //     $api.attr($api.dom(".portrait img"), 'src', image)
+        //     // 计时
+        //       var sec = 0;//秒
+        //       var minu = 0;//分
+        //       var gold = 0;//金币
+        //       var clock = 0;//时
+        //       var account = 0;//账户
+        //       var timer = setInterval(function(){
+        //         sec++;
+        //         if(sec == 10){
+        //           sec = 0;
+        //           minu ++;
+        //         }
+        //         $api.text($api.dom(".timer .text .allTime .minute"),minu);
+        //         $api.text($api.dom(".timer .text .allTime .second"),sec);
+        //         if(minu == 10){
+        //           minu = 0;
+        //           clock ++;
+        //         }
+        //         $api.text($api.dom(".timer .text .allTime .clock"),clock);
+        //
+        //           if(minu == 2){
+        //             gold ++;
+        //             $api.text($api.dom(".free .in_free .all .gold span"),gold+'金币')
+        //           }
+        //           $api.addEvt($api.dom(".free .in_free .all .gold"),'click',function(){
+        //             account += gold;
+        //
+        //             $api.text($api.dom(".free .in_free .all .account span"),account+'金币');
+        //             gold == 0;
+        //           })
+        //       },300);
+        //
+        //
+        //
+        // };
+        // if (num == '1') {
+        //     console.log(name)
+        //     $api.css($api.dom(".empty .personData .log_on"), 'display:none');
+        //     $api.css($api.dom(".empty .personData .personName"), 'display:none');
+        //     $api.css($api.dom(".empty .personData .user_name"), 'display:inline-block');
+        //     // $api.append($api.dom(".user_name"),'<li></li>')
+        //     query();
+        //
+        // };
+    }
+    // 退出登陆
+    function loginout() {
+      var exit = $api.getStorage('exit')//判断已登陆
+      var login = 'login';
+        $api.addEvt($api.dom(".quit .login"), 'click', function() {
+          api.openWin({
+            name:'login',
+            url:'./login.html',
+            pageParam: { //传递参数给登陆界面
+                login: login
+            }
+          })
+          api.closeWin();
+          $api.setStorage('exit','exitback');
+          $api.clearStorage();
+        })
+    }
+    // // 建立查询语句 初始化
+    // function initConfig() {
+    //     var model = api.require('model');
+    //     model.config({
+    //         appId: 'A6007193486393',
+    //         appKey: '6AC0DC07-3FF1-FA88-F56D-CF7BC56F280E',
+    //         host: 'https://d.apicloud.com'
+    //     })
+    //     return model;
+    // }
+
+
+    // // 建立查询语句
+    // function query() {
+    //     var name = api.pageParam.name;
+    //     var model = initConfig();
+    //     var query = api.require('query');
+    //     query.createQuery(function(ret, err) {
+    //         var queryId = ret.qid;
+    //         query.whereEqual({
+    //             qid: queryId,
+    //             column: 'uname',
+    //             value: name
+    //         });
+    //         model.findAll({
+    //             qid: queryId,
+    //             class: 'users'
+    //         }, function(ret, err) {
+    //             var userName = $api.dom(".empty .personData .user_name")
+    //             console.log(JSON.stringify(ret[0].uname))
+    //             if (ret[0]) {
+    //                 $api.append(userName, `用户名：<li>${ret[0].uname}</li>`)
+    //                     // $api.html($api.dom(".user_name"),)
+    //             }
+    //         })
+    //     })
+    // }
+
+
+    // 点击头像
+    function showAction(){
+      var username = $api.getStorage('username')//判断已登陆
+      console.log(username)
+      if(username !== undefined){
+        api.actionSheet({
+            title: '上传图片',
+            cancelTitle: '取消',
+            buttons: ['拍照', '从手机相册选择', '查看头像']
+        }, function(ret, err) {
+            if (ret) {
+                console.log(JSON.stringify(ret))
+                console.log(JSON.stringify(err))
+                getPicture(ret.buttonIndex);
+                // test()
+                // console.log(ret)
+            }
+        });
+      }else{
+        api.toast({
+            msg: '请先登陆',
+            duration: '1000',
+            localtion: 'top'
+        });
+      }
+    }
+
+    // function upDate(uname, img) {
+    //     // uname = uname.toString();
+    //     console.log(uname)
+    //     var model = initConfig();
+    //     var query = api.require('query');
+    //     query.createQuery(function(ret, err) {
+    //         var queryId = ret.qid;
+    //         query.whereEqual({
+    //             qid: queryId,
+    //             column: 'user_name',
+    //             value: uname
+    //
+    //         });
+    //         model.findAll({
+    //             qid: queryId,
+    //             class: 'forward'
+    //         }, function(ret, err) {
+    //
+    //             // var userName = $api.dom(".empty .personData .user_name")
+    //             console.log(JSON.stringify(ret))
+    //             if (ret) {
+    //                 var len = ret.length;
+    //                 for (var i = 0; i < len; i++) {
+    //                     var uid = ret[i].id
+    //                     model.updateById({
+    //                         class: 'forward',
+    //                         id: uid,
+    //                         value: {
+    //                             "user_head": img
+    //                         }
+    //                     })
+    //                 };
+    //             }
+    //
+    //         });
+    //
+    //     })
+    // }
+
+    function test() {
+        var module = api.require('easyCamera');
+        var param = {
+            typeString: 'image' // 或者'video-20'
+        };
+        var resultCallback = function(ret, err) {
+            var msg = ret.msg;
+
+            api.toast({
+                msg: msg
+            });
+        }
+        module.openCamera(param, resultCallback);
+    }
+
+    function getPicture(sourceType) {
+        if (sourceType == 1) { // 拍照
+            api.getPicture({
+                sourceType: 'camera',
+                encodingType: 'jpg',
+                mediaValue: 'pic',
+                allowEdit: true,
+                destinationType: 'base64',
+                quality: 100,
+                targetWidth: 200,
+                targetHeight: 200,
+                saveToPhotoAlbum: true
+            }, function(ret, err) {
+                if (ret) {
+                    console.log("1111111444111111111")
+                    if (ret.data != '' && ret.data != undefined) {
+                        console.log("1111333111111111111")
+                        var img = ret.base64Data; //图片链接
+                        console.log(img)
+                        var userid = $api.getStorage('uid')
+                        $.ajax({
+                          url:'http://112.74.39.180:80/update',
+                          type:'post',
+                          dataType:'json',
+                          data:{
+                            value:img,
+                            uid:userid,
+                            key:'img'
+                          }
+                        })
+                        .done(function(ret){
+                          console.log(JSON.stringify(ret))
+                          if(ret.status == 1){
+                            document.getElementById("img_tx").src = img;
+                              $api.setStorage('userImage', img);
+                          }
+                        })
+                        .fail(function(err){
+                          console.log(JSON.stringify(err))
+                        })
+                    }
+                }
+            });
+        } else if (sourceType == 2) { // 从相册中选择
+            api.getPicture({
+                sourceType: 'library',
+                encodingType: 'jpg',
+                mediaValue: 'pic',
+                destinationType: 'base64',
+                quality: 100,
+                targetWidth: 200,
+                targetHeight: 200
+            }, function(ret, err) {
+                if (ret) {
+                  if (ret.data != '' && ret.data != undefined) {
+                      console.log("1111333111111111111")
+                      var img = ret.base64Data; //图片链接
+                      console.log(img)
+                      var userid = $api.getStorage('uid')
+                      $.ajax({
+                        url:'http://112.74.39.180:80/update',
+                        type:'post',
+                        dataType:'json',
+                        data:{
+                          value:img,
+                          uid:userid,
+                          key:'img'
+                        }
+                      })
+                      .done(function(ret){
+                        console.log(JSON.stringify(ret))
+                        if(ret.status == 1){
+                          document.getElementById("img_tx").src = img;
+                            $api.setStorage('userImage', img);
+                        }
+                      })
+                      .fail(function(err){
+                        console.log(JSON.stringify(err))
+                      })
+                  }
+                }
+            });
+        } else if (sourceType == 3) {
+            // return;
+            console.log('333');
+            $api.css($api.dom(".img"), 'display:block')
+            var imgs = $api.getStorage('userImage');
+            $api.attr($api.dom(".img img"), 'src', imgs);
+            $api.addEvt($api.dom(".img"), 'click', function() {
+                $api.css($api.dom(".img"), 'display:none')
+            });
+        }
+    }
+</script>
+
+</html>

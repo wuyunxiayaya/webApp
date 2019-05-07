@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>社区</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/home/frame2.css">
+</head>
+
+<body>
+    <div class="none"><span>请先登陆</span></div>
+    <div class="content">
+        <div class="input_wrape">
+            <textarea class="inputs" name="name" rows="8" cols="80" placeholder="说出你的想法"></textarea>
+            <button onclick="commentSure()" class="sure">确认</button><button class="cancel">取消</button>
+        </div>
+
+        <div class="comment_list" style="margin-bottom:20px;">
+
+            <!-- <ul>
+                <li>
+                    <a href="">12312</a><span>:123</span>
+                </li>
+                <li><a href="">12312</a><span>回复</span><a>123:</a><span>急急急经济</span></li>
+            </ul>
+            <ul>
+                <li><a href="">12312</a><a>:123</a></li>
+                <li><a href="">12312</a><span>回复</span><a>123:</a><span>急急急经济</span></li>
+            </ul> -->
+
+
+        </div>
+    </div>
+
+
+</body>
+
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="//cdn.bootcss.com/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+<script src="../script/api.js"></script>
+<script src="../script/SHA1.js"></script>
+
+<script>
+    apiready = function() {
+      // dianzan();//点赞
+            getComentData(0, 5, 1)
+                // head()
+            api.setRefreshHeaderInfo({
+                visible: true,
+                bgColor: 'rgba(0,0,0,0)',
+                textColor: '#666',
+                textDown: '下拉刷新',
+                textUp: '释放刷新'
+            }, function(ret, err) {
+                toDoRequest();
+                getComentData(0, 5, 1)
+
+            });
+            // initList()
+            // clickUp();
+            click();
+            // person_publish();
+
+
+        }
+        // 刷新
+    function toDoRequest() {
+        var connectionType = api.connectionType;
+        console.log(connectionType)
+        if (connectionType == 'none') {
+            setTimeout(function() {
+                api.refreshHeaderLoadDone(); //复位下拉刷新
+                api.toast({
+                    msg: '刷新失败',
+                    duration: '1000',
+                    localtion: 'middle'
+                });
+            }, 3000)
+        } else {
+            setTimeout(function() {
+                api.refreshHeaderLoadDone(); //复位下拉刷新
+                api.toast({
+                    msg: '刷新成功',
+                    duration: '1000',
+                    localtion: 'middle'
+                });
+            }, 500)
+        }
+    }
+
+    function click() {//点击
+        $(".content .input_wrape .cancel").on('click', function() { //点击取消输入框消失
+            $(".input_wrape").css({
+                "display": "none"
+            })
+        });
+        var username = $api.getStorage('username') //判断已登陆
+        if (username == undefined) {
+            $(".content").css({
+                'display': 'none'
+            })
+            $(".none span").css({
+                'display': 'inline-block'
+            })
+            $(".none").append(`<img src="../image/img/nimingyonghu.png" alt="" />`)
+        } else {
+            // initList();
+            getComentData(0, 5, 1)
+        }
+    }
+    function dianzan(self){//点赞
+      if(self.children("i").hasClass("up1")){
+        api.toast({
+            msg: '您已经点过赞',
+            duration: '1000',
+            localtion: 'middle'
+        });
+      }
+      self.children("i").addClass("up1");
+      console.log(self)
+      var dianzanId = self.parents(".recommend").attr('data-id')
+      console.log(dianzanId)
+      $.ajax({
+        url:'http://112.74.39.180:80/dianzan',
+        type:'post',
+        dataType:'JSON',
+        data:{
+          dianzanId:dianzanId
+        }
+      })
+      .done(function(ret){
+        console.log(JSON.stringify(ret))
+        // if()
+      })
+      .fail(function(err){
+        console.log(err)
+      })
+    }
+    function getComentData(readly, alzy, type) {
+        $.ajax({
+                url: 'http://112.74.39.180:80/comment/refresh?readly=' + readly + '&alzy=' + alzy,
+                type: 'get',
+                dataType: 'json'
+            })
+            .done(function(ret) {
+                console.log(JSON.stringify(ret))
+                var len = ret.length;
+                if (type == 1) {
+                    $(".content .comment_list").children().remove();
+                }
+                for (var i = 0; i < len; i++) {
+                    var frashId = ret[i].id;
+                    console.log(frashId)
+                    var time = ret[i].createdTime;
+                    var date = new Date(parseInt(time) * 1000).toLocaleString().replace(/:\d{1,2}$/, ' ');
+                    console.log(date)
+                    console.log(ret[i].zan)
+                    console.log(typeof(ret[i].zan))
+                    var zanstr ;
+                    if(ret[i].zan > 0){
+                      zanstr =  `<span class="up" onclick="dianzan($(this))"><i class="up1"></i></span>`
+                        console.log(zanstr)
+                      }else{
+                        zanstr = `<span class="up" onclick="dianzan($(this))"><i></i></span>`
+                    }
+                    $(".content .comment_list").append(
+                        `<div data-id="${ret[i].id}" class="recommend">${ret[i].id}
+                                    <div class="person_info">
+                                    <div class="head">
+                                    <img src="${ret[i].userimg}" alt="" />
+                                    </div>
+                                    <span class="name">${ret[i].uname}</span>
+                                  <div class="time">${date}</div>
+                                    </div>
+                                    <div class="text">${ret[i].text}</div>
+                                    <div class="included"><div>
+                                    <img src="${ret[i].img}"
+                                    alt="" />
+                                    </div><span><em>
+                                    《<text>${ret[i].bname}</text>》| ${ret[i].author}
+                                    </em><br /><p>${ret[i].biref}</p></span></div>
+                                    <div class="person_point">
+                                    ${zanstr}
+                                    <span onclick="comment($(this))" class="comment" ><img src="../image/img/pinglun.png" alt=""></span>
+                                    <span class="forward"><img src="../image/img/zhuanfa.png" alt=""></span>
+                                    </div>
+                                    </div>`
+                    );
+                    $.ajax({
+                        url: "http://112.74.39.180:80/comment/look?id=" + ret[i].id,
+                        type: "GET",
+                        dataType: "json",
+
+                    }).done(function(rets) {
+                        console.log(JSON.stringify(rets));
+                        var len = rets.length;
+                        // var forwardId = rets[i].forwardId;
+                        // console.log(ret[i])
+                        for (var j = 0; j < len; j++) {
+                            if (rets && rets[j].comtToUser) {
+
+                                $(".recommend[data-id=" + rets[j].forwardId + "]").append(`
+                                            <ul>
+                                                <li onclick="recomment($(this))" data-isFirst="yes"><a href="">${rets[j].comtUser}</a>回复<a href="">${rets[j].comtToUser}</a><span>:${rets[j].text}</span></li> </ul>
+                                            `)
+                            } else if (rets) {
+                                $(".recommend[data-id=" + rets[j].forwardId + "]").append(`
+                                            <ul>
+                                                <li onclick="recomment($(this))" data-isFirst="yes"><a href="">${rets[j].comtUser}</a><span>:${rets[j].text}</span></li> </ul>
+                                            `)
+                            }
+
+                        }
+
+                    }).fail(function(err) {
+                        console.log(JSON.stringify(err))
+
+                    })
+                };
+
+
+
+
+            })
+            .fail(function(err) {
+                console.log(JSON.stringify(err))
+            })
+    }
+
+    function refresh() {
+        getComentData(0, 5, 1)
+    }
+
+    function commentSure() {
+        var e = event || window.event;
+        e.stopPropagation();
+        // e.cancelBuble()
+        // $api.getStorage('commentToName')
+        var commentToName = $api.getStorage('commentToName');
+        var commentType = $api.getStorage('commentType');
+        var commentId = $api.getStorage('commentid');
+        var username = $api.getStorage('username');
+        console.log(username)
+        console.log(commentToName)
+        console.log(commentId)
+        var textVal = $('textarea').val();
+        var data = {};
+        console.log(commentId)
+        if (commentToName && commentToName !== '') {
+            // data.commentToName = commentToName;
+            data = {
+                type: commentType,
+                commentId: commentId,
+                textVal: textVal,
+                username: username,
+                commentToName: commentToName
+            }
+            console.log(commentToName)
+        } else {
+            data = {
+                type: commentType,
+                commentId: commentId,
+                textVal: textVal,
+                username: username,
+            }
+        }
+        console.log(textVal)
+        console.log(commentId)
+        if (textVal !== '') {
+            $("textarea").val("");
+            $(".input_wrape").css({
+                "display": "none"
+            })
+            $.ajax({
+                    url: 'http://112.74.39.180:80/comment/add',
+                    type: 'post',
+                    dataType: 'json',
+                    data: data
+                })
+                .done(function(ret) {
+                    console.log(JSON.stringify(ret));
+                    if (ret.status == 0) {
+                        $api.toast('title', '评论失败', 1000);
+                    }
+                    if (ret.status == 1) {
+                        // for (let j = 0; j < len; j++) {
+                        // if()
+                        console.log(JSON.stringify(ret.msg.commentToName))
+                        console.log(JSON.stringify(ret))
+                        console.log(ret.msg.commentToName)
+                        if (ret.msg.commentToName) {
+                            console.log(ret.msg.commentToName)
+                            console.log(ret.msg.username)
+                            $(".recommend[data-id=" + commentId + "]").append(
+                                `
+                                          <ul>
+                                              <li onclick="recomment($(this))" data-isFirst="yes"><a href="">${ret.msg.username}</a>回复<a href="">${ret.msg.commentToName}</a><span>:${ret.msg.textVal}</span></li>
+                                          </ul>
+                                          `
+                            )
+                        } else {
+                            $(".recommend[data-id=" + commentId + "]").append(
+                                `
+                                          <ul>
+                                              <li onclick="recomment($(this))" data-isFirst="yes"><a href="">${ret.msg.username}</a><span>:${ret.msg.textVal}</span></li>
+                                          </ul>
+                                          `
+                            )
+                        }
+
+                        // }
+                    }
+
+                })
+                .fail(function(err) {
+                    console.log(JSON.stringify(err))
+                })
+
+        }
+
+    }
+
+    function recomment(self) {
+        var e = event || window.event;
+        e.stopPropagation();
+        $api.css($api.dom(".content .input_wrape"), 'display:block');
+        $(".content .input_wrape .inputs").focus()
+        console.log(self)
+            // var id = self.parents('.recommend').attr('data-id')
+            // $api.setStorage('commentid', id);
+        $api.setStorage('commentType', 'recomment');
+
+        // console.log(id)
+        // var commentId = $api.getStorage('commentid');
+        var username = $api.getStorage('username');
+        var commentId = self.parents(".recommend").attr('data-id')
+        $api.setStorage('commentid', commentId);
+        console.log(commentId)
+        $api.css($api.dom(".content .input_wrape"), 'display:block');
+        $(".content .input_wrape .inputs").focus()
+            // var textVal = $('textarea').val();
+            // console.log(self.children().eq(0).text());
+        var clickName = self.children().eq(0).text()
+        console.log(clickName)
+        $api.setStorage('commentToName', clickName);
+        console.log($api.getStorage('commentToName'))
+    }
+
+    function comment(self) {
+        var e = event || window.event;
+        e.stopPropagation();
+        $api.css($api.dom(".content .input_wrape"), 'display:block');
+        console.log(self)
+        $api.rmStorage('commentToName');
+        var id = self.parents('.recommend').attr('data-id')
+        $api.setStorage('commentid', id);
+        $api.setStorage('commentType', 'comment');
+        $(".content .input_wrape .inputs").focus()
+        console.log(id)
+    }
+
+    function initList(page) {
+        $.ajax({
+                url: 'http://112.74.39.180:80/forward/get',
+                type: 'get',
+                dataType: 'json',
+            })
+            .done(function(ret) {
+                console.log(JSON.stringify(ret))
+                var len = ret.length;
+                console.log(len)
+                for (var i = 0; i < len; i++) {
+                    var id = ret[i].id;
+                    var time = ret[i].createdTime;
+                    var date = new Date(parseInt(time) * 1000).toLocaleString().replace(/:\d{1,2}$/, ' ');
+                    console.log(date)
+                    $(".content .comment_list").prepend(
+                        `<div data-id="${ret[i].id}" class="recommend">${ret[i].id}
+                            <div class="person_info">
+                            <div class="head">
+                            <img src="${ret[i].userimg}" alt="" />
+                            </div>
+                            <span class="name">${ret[i].uname}</span>
+                          <div class="time">${date}</div>
+                            </div>
+                            <div class="text">${ret[i].text}</div>
+                            <div class="included"><div>
+                            <img src="${ret[i].img}"
+                            alt="" />
+                            </div><span><em>
+                            《<text>${ret[i].bname}</text>》| ${ret[i].author}
+                            </em><br /><p>${ret[i].biref}</p></span></div>
+                            <div class="person_point">
+                            <span onclick="dianzan($(this))" class="up"><i></i></span>
+                            <span onclick="comment($(this))" class="comment" ><img src="../image/img/pinglun.png" alt=""></span>
+                            <span class="forward"><img src="../image/img/zhuanfa.png" alt=""></span>
+                            </div>
+                            </div>`
+                    );
+                }
+
+            })
+            .fail(function(err) {
+                console.log(JSON.stringify(err))
+            })
+
+
+    }
+
+    function head() {
+        // 点击用户头像
+        $(".content").on('click', '.person_info', function() {
+            // var otherName = $(this).text();//用户名
+            var otherName = $(this).parents(".recommend").attr("data-id") //用户名
+            var lookname = $(this).text();
+            // var lookname = $api.getStorage('username');
+            $api.setStorage('look_name', lookname);
+            console.log(lookname)
+            console.log(otherName)
+            var model = initConfig();
+            var query = api.require('query');
+            query.createQuery(function(ret, err) {
+                if (ret) {
+                    var qid = ret.qid;
+                    query.whereEqual({
+                        qid: qid,
+                        value: lookname,
+                        column: 'username'
+                    });
+                    model.findAll({
+                        class: 'user',
+                        qid: qid
+                    }, function(ret, err) {
+                        if (ret) {
+                            console.log(JSON.stringify(ret))
+                            query.createQuery(function(ret, err) {
+                                var uqid = ret.qid;
+                                model.findById({
+                                    class: 'user',
+                                    id: 'id'
+                                }, function(ret, err) {
+
+                                });
+                            });
+                        }
+                    });
+                }
+            });
+            // $api.setStorage('otherName', otherName);
+            // var otherImg = $(this).user_head;//用户名
+            console.log($(this).text());
+            console.log(otherName);
+            api.openWin({
+                name: 'look_other',
+                url: './look_other.html',
+                pageParam: {
+                    otherName: otherName
+                }
+            })
+        })
+    }
+</script>
+
+</html>

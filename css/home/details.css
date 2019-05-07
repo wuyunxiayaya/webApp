@@ -1,0 +1,214 @@
+li{
+  list-style:none;
+}
+/*弹出框*/
+ button{
+  height:30px;
+  width:50px;
+  background-color:#cdd;
+  margin-left:3px;
+  outline: none;
+}
+/*头部详情*/
+.empty .topDetail{
+  position:relative;
+  /*vertical-align:middle;*/
+  /*background-image:url("http://www.xyyuedu.com/uploads/180714/9758-1PG420102Q19.jpg");*/
+  background-size:100%;
+  display:flex;
+  justify-content: center;
+  align-items:center;
+  /*text-align:center;*/
+  height:200px;
+  /*width:0%;*/
+  /*background-color:#aaa;*/
+}
+.empty .topDetail .reader{
+  /*border:1px solid black;*/
+  height:200px;
+  width:60%;
+  margin-left:20px;
+}
+.empty .topDetail .wrap{
+  /*display:inline-block;*/
+  /*border:1px solid black;*/
+  width:88%;
+  /*vertical-align:middle;*/
+}
+.empty .topDetail .wrap .book{
+  position:absolute;
+  top:25px;
+  left:0px;
+  display:inline-block;
+  /*border:1px solid black;*/
+  /*float:left;*/
+}
+
+.empty .topDetail .wrap .book img{
+  max-width:30px;
+}
+.empty .topDetail .wrap .book img{
+  display:inline-block;
+  max-height:120px;
+  vertical-align:middle;
+}
+.empty .topDetail .wrap .icon{
+  position:absolute;
+  top:25px;
+  right:5px;
+  display:inline-block;
+  max-height:80%;
+  width:100px;
+  z-index:2;
+  background-color:rgba(45, 44, 44, 0.5);
+  border-radius:5px;
+}
+/*.empty .topDetail .wrap .sc{
+  max-height:40px;
+}*/
+.empty .topDetail .wrap .icon span,.empty .topDetail .wrap .icon i{
+  margin-top:6px;
+  font-size: 18px;
+  color:#ffd;
+}
+.empty .topDetail .wrap .icon .collection{
+  max-height:30px;
+  vertical-align:bottom;
+  display:none;
+}
+.empty .topDetail .wrap .icon .collection,.un_collection{
+  max-width:25px;
+  /*height: 20px;*/
+  /*vertical-align:bottom;*/
+  /*display:inline-block;*/
+  /*background: url('../../image/img/collection.png');*/
+}
+.empty .topDetail .wrap .icon .forward{
+  max-width:30px;
+  vertical-align:bottom;
+}
+/*书本介绍*/
+.empty .vessel{
+  background-color:#fff;
+  height:120px;
+  width:100%;
+  text-align:center;
+}
+.empty .vessel .brief{
+  position:relative;
+  top:-20px;
+  border-radius:20px;
+  display:inline-block;
+  background-color:#fff;
+  height:120px;
+  width:90%;
+  box-shadow:#999 2px 3px 5px;
+  /*display:flex;
+  justify-content: center;
+  align-items:center;*/
+
+  /*display: -webkit-box;
+  -webkit-line-clamp: 3; //行数*/
+}
+.empty .vessel .brief .title{
+  /*font-size:16px;*/
+  font-weight:bold;
+}
+.empty .vessel .brief .text{
+  /*border:1px solid black;*/
+  height:95px;
+  width:90%;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  overflow: hidden;
+  margin:6px;
+}
+/*回合*/
+.empty .round{
+  width:100%;
+  /*border:1px solid black;*/
+  text-align:center;
+}
+.empty .round li{
+  /*display:inline-block;*/
+  text-align:center;
+}
+.empty .round .list{
+  display:none;
+  /*text-align:center;*/
+  width:100%;
+  /*border:1px solid black;*/
+}
+.empty .round .list li .lis{
+  /*border:1px solid #ff44df;*/
+  display:inline-block;
+  height:30px;
+  width:45%;
+  line-height:30px;
+  text-align:left;
+  /*border-bottom:0px;*/
+  overflow-x:scroll;
+  overflow-y:hidden;
+  /*text-overflow:ellipsis;*/
+  font-size:13px;
+  margin-left:10px;
+}
+.empty .round .btn{
+  border:1px solid #999;
+  display:inline-block;
+  /*line-height:20px;*/
+  height:40px;
+  width:90%;
+  border-radius:10px;
+}
+.empty .round .btn .imgText1,.empty .round .btn .imgText2{
+  display:inline-block;
+  margin-top:10px;
+  /*display:block;*/
+  /*border:1px solid black;*/
+  /*width:30px;*/
+}
+/*.empty .round .btn .imgText2{
+  display:none;
+}*/
+.empty .round .btn img{
+  max-width:12px;
+}
+/*今日推荐*/
+.empty .recomment{
+  position:relative;
+  top:10px;
+  display:flex;
+  height:200px;
+  /*border:1px solid black;*/
+  align-items:flex-end;
+  background-color:#fff;
+}
+.empty .recomment .maxText{
+  position:absolute;
+  top:18px;
+  font-weight:bold;
+}
+.empty .recomment ul{
+  display:inline-block;
+  /*border:1px solid black;*/
+  height:150px;
+  width:100%;
+  white-space:nowrap;
+  overflow:scroll;
+}
+.empty .recomment ul li{
+  /*width:100%;*/
+  display:inline-block;
+  /*border:1px solid red;*/
+  text-align:center;
+}
+.empty .recomment ul li img{
+  max-height:130px;
+  box-shadow:#999 20px 3px 10px;
+  margin-left:5px;
+}
+.empty .recomment ul li text{
+  display:block;
+}

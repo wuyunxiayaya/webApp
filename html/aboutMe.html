@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/home/aboutMe.css">
+    <!-- <link rel="stylesheet" href="../css/home/home4.css"> -->
+</head>
+
+<body>
+<div class="vessel">
+
+</div>
+<div class="bag">
+  <div class="mask">
+  </div>
+  <div class="comment_area">
+    <textarea class="recomment_input" name="name" rows="8" cols="80"></textarea>
+    <button class="cancel">取消</button>
+    <button class="sure">确认</button>
+  </div>
+</div>
+
+
+</body>
+
+<script type="text/javascript" src="../script/api.js">
+</script>
+<script src="../script/SHA1.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script>
+    apiready = function() {
+        publish()
+    }
+
+
+    // 建立查询语句 初始化
+    // function initConfig() {
+    //     var model = api.require('model');
+    //     model.config({
+    //         appId: 'A6007193486393',
+    //         appKey: '6AC0DC07-3FF1-FA88-F56D-CF7BC56F280E',
+    //         host: 'https://d.apicloud.com'
+    //     })
+    //     return model;
+    // }
+
+    function publish() {//展示评论内容
+      var msgid = api.pageParam.msgid;
+      console.log(JSON.stringify(msgid));
+      var len = msgid.length;
+      console.log(len)
+      for(var i = 0; i < len; i ++){
+        console.log(JSON.stringify(msgid[i].text))
+        var msgbname = msgid[i].bname;
+        var msgtext = msgid[i].text;
+        $api.setStorage('msgbname', msgbname);
+        $api.setStorage('msgtext', msgtext);
+        $.ajax({
+          url:'http://112.74.39.180:80/noread/get',
+          type:'post',
+          dataType:'json',
+          data:{
+            msgid:msgid[i].id,
+            num:msgid[i].noread
+          }
+        })
+        .done(function(ret){
+          console.log(JSON.stringify(ret))
+          console.log(JSON.stringify(ret.comt))
+          if(ret.comt){
+            var msgtext = $api.getStorage('msgtext');
+            var msgbname = $api.getStorage('msgbname');
+            console.log(JSON.stringify(msgbname));
+            console.log(JSON.stringify(msgtext));
+            var len =  ret.comt.length;
+            for(var n = 0; n < len; n ++){
+              console.log(JSON.stringify(ret.comt[n]))
+              console.log(JSON.stringify(ret.forward))
+              $(".vessel").prepend(`<div class="wrap">
+                    <div class="response">
+                    <span onclick="recomment($(this))" class="recomment">回复</span>
+                      <span class="othername">${ret.comt[n].comtUser}:</span>
+                      <span class="text_content">${ret.comt[n].text}</span>
+
+                    </div>
+                    <div class="content">
+                      <span class="bookname">《${ret.forward[0].bname}》</span>
+                      <span data-id="${ret.comt[n].id}" class="text">${ret.forward[0].text}</span>
+                    </div>
+              </div>`)
+            }
+
+          }
+
+        })
+        .fail(function(err){
+          console.log(JSON.stringify(err))
+        })
+      }
+    }
+    function recomment(self){//回复评论
+      $(".bag").show();
+      $(".bag .comment_area .recomment_input").focus();
+      // self.children("i").addClass("up1");
+      console.log(self.parents(".wrap").children(".text").attr("data-id"))
+      $(".bag .comment_area .sure").on('click',function(){
+          $(".vessel .wrap").append(`<span>aaaaaa</span>`)
+        $(".bag").hide();
+        var val = $(".bag .comment_area .recomment_input").val();
+        console.log(val)
+      })
+      $(".bag .comment_area .cancel").on('click',function(){
+        $(".bag").hide();
+      })
+      $(".bag").on('click',function(){
+        $(".bag").hide();
+      })
+    }
+</script>
+
+</html>

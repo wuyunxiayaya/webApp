@@ -1,0 +1,22 @@
+/*大标题样式*/
+.top_guide .top_img{
+  /*border:1px solid black;*/
+  padding-top:25px;
+  height:50px;
+  text-align:center;
+  font-size:21px;
+  font-weight:bold;
+  /*background-color:#999;*/
+}
+/*返回键大小*/
+.top_guide .top_img .back{
+  max-width:30px;
+  float:left;
+}
+/*标题样式*/
+.top_guide span{
+  /*margin-top:21%;*/
+  display:inline-block;
+  /*vertical-align:top;*/
+  font-size:21px;
+}

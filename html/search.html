@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/home/search.css">
+</head>
+
+<body>
+    <div class="wrape">
+        <div class="back">
+            <img src="../image/img/back.png" alt="">
+        </div>
+        <div class="input-kw-form">
+
+            <input id='input1' type="search" onfocus="addKeyDownEvt(event,$(this))" placeholder="请输入关键词" class="input-kw" />
+            <button class="go">搜索</button>
+            <div style="margin:0 auto;max-height:200px;overflow-x:scroll">
+                <ul class="search-list">
+                    <!-- <li style="height:30px">123</li>
+                  <li style="height:30px">321</li>
+                  <li style="height:30px">123</li>
+                  <li style="height:30px">123</li> -->
+                </ul>
+            </div>
+        </div>
+        <div class="nearly">
+            搜索记录
+            <ul>
+            </ul>
+            <span style="margin-top:30px;line-height:25px;" class="clear_all">清除所有历史记录</span>
+        </div>
+
+    </div>
+
+</body>
+
+<script type="text/javascript" src="../script/api.js">
+</script>
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script>
+    apiready = function() {
+        //自动聚焦
+        $("#input1").focus();
+        // 初始化事件
+        init();
+          // showNearly();
+        //  监听刷新搜索历史记录事件
+        api.addEventListener({
+            name: 'myEvent'
+        }, function(ret, err) {
+            if (ret.value.state == 'no') {
+                showNearly();
+                // console.log("mmmmmmmmmmmmmmmmmmm")
+            }
+        });
+        console.log("eeeeeeeeeeeeeeeee")
+    }
+
+    // 初始化函数
+    function init() {
+        close();
+        sousuo();
+        //  载入搜索历史记录
+        showNearly();
+        clearNearly();
+        nearlyDelete();
+        // close()
+    }
+
+    function clearNearly() {
+        $(".clear_all").on('click', function() {
+            $api.rmStorage('nearly');
+            $(".wrape .nearly ul").children().remove();
+        })
+    }
+
+    // 展示历史记录
+    function showNearly() {
+        var nearlyListArr = $api.getStorage('nearly');
+        if (nearlyListArr && nearlyListArr !== undefined) {
+            nearlyListArr = nearlyListArr.split('-')
+            var len = nearlyListArr.length;
+            $(".wrape .nearly ul").children().remove()
+            for (var i = 0; i < len; i++) {
+                if (nearlyListArr[i] == '') continue;
+                $(".wrape .nearly ul").prepend(`
+            <li class="read_list">${nearlyListArr[i]}<i><i></li>
+            `)
+            }
+        } else {
+            return;
+        }
+    }
+
+    function nearlyDelete() {
+        // index点击对象下标，liSelf点击对象
+        var index,
+            liText,
+            liSelf;
+        var starTime = '';
+        var overTime = '';
+        $(".nearly").on('touchstart', 'li', function() {
+            clearInterval(overTime)
+            starTime = new Date().getTime();
+            liSelf = $(this)
+            liText = $(this).text()
+            console.log(liText)
+            index = liSelf.index()
+            console.log(liSelf.index())
+            overTime = setInterval(function() {
+                if (new Date().getTime() - starTime > 800) {
+                    clearInterval(overTime)
+                    showDel(liSelf)
+                }
+            }, 10)
+        });
+        $(".nearly").on('touchend', 'li', function() {
+            clearInterval(overTime)
+        });
+        $("body").on("click", function() {
+            $(".wrape .nearly").find("i").hide();
+        })
+
+
+
+        // 点击删除指定记录
+        $(".nearly ul").on('click', 'i', function() {
+            console.log(index)
+            delANearly(liText)
+            $(this).parent().remove()
+        })
+    }
+    // 显示删除图标
+    function showDel(self) {
+        $(".wrape .nearly .read_list i").hide()
+        self.children().show();
+    }
+
+
+
+    function initApiCloud() {
+        var model = api.require('model'); //model对象
+        model.config({
+            appId: 'A6007193486393',
+            appKey: '6AC0DC07-3FF1-FA88-F56D-CF7BC56F280E',
+            host: 'https://d.apicloud.com' //固定地址
+        });
+        return model;
+    }
+
+
+    // 添加聚焦事件
+    function addKeyDownEvt() {
+        document.onkeydown = keyDownSearch;
+    }
+
+    // 监听回车事件  13
+    function keyDownSearch(e, target) {
+      console.log('....111')
+        // 兼容FF和IE和Opera
+        var theEvent = e || window.event;
+        var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+        var inpuText = $api.dom("#input1")
+        if (code == 13) {
+          console.log('....222222')
+            var val = $api.val(inpuText)
+            getBook(val, 'vague')
+            return false;
+        }
+        return true;
+
+    }
+
+
+    //数组去重
+    function uniq(array) {
+        var temp = []; //一个新的临时数组
+        for (var i = 0; i < array.length; i++) {
+            if (temp.indexOf(array[i]) == -1 || array[i] !== "") {
+                temp.push(array[i]);
+            }
+        }
+        return temp;
+    }
+
+    // 删除数组指定值
+    function delArr(array, val) {
+        var temp = [];
+        for (var i = 0; i < array.length; i++) {
+            if (array[i] !== val && array[i] !== "") {
+                temp.push(array[i])
+            }
+        }
+        return temp;
+    }
+
+    // 删除单条记录
+    function delANearly(text) {
+        var listArr = '';
+        listArr = $api.getStorage('nearly');
+        console.log(JSON.stringify(listArr))
+        listArr = listArr.split('-')
+        listArr = delArr(listArr, text)
+        console.log(JSON.stringify(listArr))
+
+        listArr = listArr.join('-')
+        console.log(JSON.stringify(listArr))
+
+        $api.setStorage('nearly', listArr)
+        listArr = $api.getStorage('nearly');
+        console.log(JSON.stringify(listArr))
+            // }
+    }
+
+    //添加历史记录事件
+    function setNearly(value) {
+        var listArr = '';
+        listArr = $api.getStorage('nearly');
+        if (listArr == undefined || JSON.stringify(listArr) == '{}') {
+            listArr = []
+            listArr.push(value)
+            listArr = listArr.join('-')
+            $api.setStorage('nearly', listArr)
+            listArr = $api.getStorage('nearly');
+        } else {
+            listArr = listArr.split('-')
+            listArr.push(value)
+            listArr = uniq(listArr)
+            listArr = listArr.join('-')
+            $api.setStorage('nearly', listArr)
+            listArr = $api.getStorage('nearly');
+        }
+    }
+    // function
+    function sousuo() {
+        $api.addEvt($api.dom(".go"), 'click', function() {
+          val = $("#input1").val();
+          console.log(val)
+          $.ajax({
+            url:'http://112.74.39.180:80/search',
+            type:'post',
+            dataType:'JSON',
+            data:{
+              val:val,
+              type:'2'
+            }
+          })
+          .done(function(ret){
+            console.log(JSON.stringify(ret));
+            console.log(JSON.stringify(ret.type));
+            // var type = ret.type;
+            var retAll = ret;
+            console.log(retAll)
+            // var bookname
+            api.openWin({
+              name:'classify',
+              url:'./classify.html',
+              pageParam:{
+                retAll:retAll,
+              }
+            })
+          })
+          .fail(function(err){
+            console.log(JSON.stringify(err))
+          })
+          var value = $("#input1").val();
+            setNearly(value);
+        })
+        // 点击跳转界面
+        $(".nearly").on('click','li',function(){//点击搜索记录
+          // var value = $("li a").text();
+          var liText = $(this).text()
+          getBook(liText)
+          console.log(liText)
+          // api.openWin({
+          //   name:'classify',
+          //   url:'./classify.html',
+          //   // pageParam:{
+          //   //   bookname:liText
+          //   // }
+          // })
+        })
+    }
+
+    var val = ''
+
+    function close() {
+        $api.addEvt($api.dom(".wrape .back img"), 'click', function() {
+            api.closeWin({
+                name: 'search'
+            })
+        });
+
+        // 关键字搜索
+        $("#input1").bind("input propertychange", function(event) {
+            var e = event || window.event || arguments.callee.caller.arguments[0];
+            console.dir(JSON.stringify(e.target))
+            console.log(JSON.stringify(e.keyCode))
+            console.log($("#input1").val())
+            val = $("#input1").val().replace(/(^\s*)|(\s*$)/g, "");
+            console.log(val)
+            if (val) {
+                $.ajax({
+                        url: 'http://112.74.39.180:80/search',
+                        type: 'post',
+                        dataType: 'json',
+                        data: {
+                            val: val,
+                            type:1
+                        }
+                    })
+                    .done(function(ret) {
+                        console.log(JSON.stringify(ret))
+                        if(ret.data){
+                          var len = ret.data.length;
+                          $(".search-list").children().remove();
+                          for (var i = 0; i < len; i++) {
+                              console.log(ret.data[i].name)
+                              $(".search-list").append(`
+                                     <li style="height:30px" onclick="getBook($(this).text(),'exact')">${ret.data[i].name}</li>
+                                   `);
+                          }
+                          $(".search-list").show();
+                          $(".wrape .nearly").hide();
+                        }
+                    })
+                    .fail(function(err) {
+                        console.log(JSON.stringify(err))
+                    })
+            } else {
+                $(".search-list").hide();
+                $(".wrape .nearly").show();
+            }
+        })
+    }
+
+    function getBook(text, type) {
+        var val = text.replace(/(^\s*)|(\s*$)/g, "");
+        console.log(val)
+        console.log(text)
+        setNearly(val);
+        if(val){
+          $.ajax({
+            url:'http://112.74.39.180:80/search',
+            type:'post',
+            dataType:'json',
+            data:{
+              val:val,
+              type:2
+            }
+          })
+          .done(function(ret){
+            console.log(JSON.stringify(ret));
+            console.log('....111')
+
+            console.log(JSON.stringify(ret.type));
+            // var type = ret.type;
+            var retAll = ret;
+            console.log(retAll)
+            if(ret.data){
+              api.openWin({
+                name:'classify',
+                url:'./classify.html',
+                pageParam:{
+                  retAll:retAll,
+                }
+              })
+            }
+            // var bookname
+
+          })
+          .fail(function(err){
+            console.log(JSON.stringify(err))
+          })
+        }
+
+
+        // console.log(JSON.stringify(val))
+        // var model = initApiCloud();
+        // var query = api.require('query');
+        // query.createQuery(function(ret, err) {
+        //     if (ret) {
+        //         var queryId = ret.qid;
+        //         if (type == 'exact') {
+        //             query.whereEqual({
+        //                 qid: queryId,
+        //                 column: 'book_name',
+        //                 value: val,
+        //             });
+        //         }
+        //         if (type == 'vague') {
+        //             query.whereLike({
+        //                 qid: queryId,
+        //                 column: 'book_name',
+        //                 value: val,
+        //             });
+        //         }
+        //         model.findAll({
+        //             qid: queryId,
+        //             class: 'test_descClassify'
+        //         }, function(ret, err) {
+        //             if (ret) {
+        //                 $(".wrape .nearly ul").prepend(`<li class="read_list">
+        //             <a class="a">${text}</a></li>
+        //           `)
+        //                     // console.log(bookName);
+        //                 api.openWin({
+        //                     name: 'classify',
+        //                     url: './classify.html',
+        //                     pageParam: {
+        //                         // bookName:bookName,
+        //                         val: val
+        //                     }
+        //                 })
+        //
+        //             }
+        //         })
+        //     } else {
+        //         console.log('err');
+        //     }
+        // })
+    }
+</script>
+
+</html>

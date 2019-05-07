@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../css/api.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/home/collect.css">
+    <title>收藏</title>
+</head>
+
+<body>
+    <div class="collect">
+        <div class="nearly">
+            <div class="img">
+                <img src="../image/img/back.png" alt="">
+            </div>
+            收藏
+        </div>
+        <div class="wrap">
+        </div>
+    </div>
+
+</body>
+
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="../script/api.js">
+</script>
+<script src="../script/collect.js"></script>
+
+<script>
+    apiready = function() {
+        back();
+        goTo();
+        collectd();
+        // 下拉刷新
+        api.setRefreshHeaderInfo({ //刷新函数
+            visible: true,
+            bgColor: 'rgba(0,0,0,0)',
+            textColor: '#666',
+            textDown: '下拉刷新',
+            textUp: '释放刷新'
+        }, function(ret, err) {
+            toDoRequest();
+            collectd();
+
+        });
+
+        function toDoRequest() {
+            var connectionType = api.connectionType;
+            console.log(connectionType)
+            if (connectionType == 'none') {
+                setTimeout(function() {
+                    api.refreshHeaderLoadDone(); //复位下拉刷新
+                    api.toast({
+                        msg: '刷新失败',
+                        duration: '1000',
+                        localtion: 'middle'
+                    });
+                }, 2000)
+            } else {
+                setTimeout(function() {
+                    api.refreshHeaderLoadDone(); //复位下拉刷新
+                    api.toast({
+                        msg: '刷新成功',
+                        duration: '1000',
+                        localtion: 'middle'
+                    });
+                }, 500)
+            }
+        };
+        api.addEventListener({
+            name: 'collectRefresh'
+        }, function(ret, err){
+            if( ret ){
+                //  alert( JSON.stringify( ret ) );
+                 collectd();
+            }else{
+                //  alert( JSON.stringify( err ) );
+            }
+        });
+
+    }
+
+    function back() {
+        $api.addEvt($api.dom(".collect .nearly img"), 'click', function() {
+            api.closeWin({
+                name: 'collect'
+            })
+        });
+        collectd();
+    }
+
+    function goTo() {
+        $api.addEvt($api.dom(".collect .wrap .content"), 'click', function() {
+            api.openWin({
+                name: 'home11',
+                url: './home11.html'
+            })
+        })
+    }
+
+    function cli(self){//点击进入页面
+      console.log(JSON.stringify(self.attr("class")))
+      var bookname = self.find(".bookname").text();
+      console.log(bookname)
+      $.ajax({
+        url:'http://112.74.39.180:80/detail',
+        type:'post',
+        dataType:'json',
+        data:{
+          bookname:bookname
+        }
+      })
+      .done(function(ret){
+        console.log(JSON.stringify(ret));
+        console.log(JSON.stringify(ret.type));
+        // var type = ret.type;
+        var retAll = ret;
+        console.log(retAll)
+        // var bookname
+        api.openWin({
+          name:'classify',
+          url:'./classify.html',
+          pageParam:{
+            retAll:retAll,
+          }
+        })
+      })
+      .fail(function(err){
+        console.log(JSON.stringify(err))
+      })
+    }
+// 收藏展示
+    function collectd() {
+      var userId = $api.getStorage('uid');
+      console.log(userId)
+      $.ajax({
+        url:'http://112.74.39.180:80/collect/getall',
+        type:'post',
+        dataType:'json',
+        data:{
+          userId:userId
+        }
+      })
+      .done(function(ret){
+        console.log(JSON.stringify(ret))
+        console.log(ret.status)
+        $('.collect .wrap').children().remove();
+        if(ret.status == 1){
+          var len = ret.data.length;
+          for(var i = 0; i < len; i ++){
+            $(".collect .wrap").prepend(
+               `<ul onclick="cli($(this))" class="content">
+                     <div class="picture">
+                     <img src="${ret.data[i].bImg}" alt="">
+                     </div>
+                     <span class="text">
+                     <em>
+                     《<span class="bookname">${ret.data[i].bName}</span>》| ${ret.data[i].bAuthor}
+                     </em><br/>
+                     <p>
+                     ${ret.data[i].bIntro}
+                     </p>
+                     </span>
+
+                  </ul>`);
+          }
+        }else{
+
+        }
+      })
+      .fail(function(err){
+        console.log(JSON.stringify(err))
+      })
+
+
+
+
+      // var username = $api.getStorage('username');
+      // console.log(username)
+      //   var model = initConfig();
+      //   var query = api.require("query");
+      //   query.createQuery(function(ret, err) {
+      //       if (ret) {
+      //           var queryId = ret.qid;
+      //           query.whereEqual({
+      //             qid:queryId,
+      //             value:username,
+      //             column:'username'
+      //           });
+      //           model.findAll({
+      //               class: 'user',
+      //               qid: queryId
+      //           }, function(ret, err) {
+      //               if (ret) {
+      //                 console.log(JSON.stringify(ret))
+      //                 var uid = ret[0].id;
+      //                 var relation = api.require("relation");
+      //                 relation.findAll({
+      //                   class:'user',
+      //                   id:uid,
+      //                   column:'collect'
+      //                 },function(ret,err){
+      //                     console.log(JSON.stringify(ret))
+      //                     var len = ret.length;
+      //                     for (var i = 0; i < len; i++) {
+      //                         var name = ret[i].collect_name;
+      //                         var author = ret[i].collect_author;
+      //                         var img = ret[i].collect_img;
+      //                         var intro = ret[i].collect_intro;
+      //                         $(".collect .wrap").prepend(
+      //                             `<ul class="content">
+      //           <div class="picture">
+      //           <img src="${img}" alt="">
+      //           </div>
+      //           <span class="text">
+      //           <em>
+      //           《${name}》| ${author}
+      //           </em><br/>
+      //           <p>
+      //           ${intro}
+      //           </p>
+      //           </span>
+      //
+      //           </ul>`);
+      //           $(".wrap").eq(i).on('click', '.content', function() {
+      //             console.log(ret.length - $(this).index())
+      //             var index = ret.length - $(this).index() - 1;
+      //             var val = ret[index].collect_name;
+      //             console.log($(this).text())
+      //               api.openWin({
+      //                   name: 'classify',
+      //                   url: './classify.html',
+      //                   pageParam:{
+      //                     val:val
+      //                   }
+      //               })
+      //           })
+      //                     }
+      //                 });
+      //
+      //               } else {
+      //
+      //               }
+      //           });
+      //       } else {}
+      //   });
+
+    }
+
+
+
+
+
+
+
+
+
+    // apiready = function(){
+    // var bookReader = api.require('bookReader');
+    //  var filePath = 'widget://res/t.txt';
+    //  bookReader.getProgress({
+    //    filePath:filePath
+    //  },
+    //  function(ret,err){
+    //    if(ret.status || !ret.progress){
+    //      showBookReader(0);
+    //      return;
+    //    }
+    //    var progress = ret.progress;
+    //
+    //    api.confirm({
+    //      title:'阅读提示',
+    //      msg:'从上次位置继续阅读？',
+    //      buttons:['重新开始','继续开始']
+    //    },function(ret,err){
+    //      if(1 == ret.buttonIndex){
+    //        showBookReader(0);
+    //      }else{
+    //        showBookReader(progress);
+    //      }
+    //    });
+    //  });
+
+    //  function showBookReader(progress){
+    //    bookReader.open({
+    //      x:'0',
+    //      y:'0',
+    //      progress:progress,
+    //      w:'api.frameWidth',
+    //      h:'api.frameHeight',
+    //      filePath:filePath,
+    //      textStyle:{
+    //        size:16,
+    //        color:'#ff0000'
+    //      },
+    //      fixedOn:api.frameName
+    //
+    //    },function(ret,err){
+    //      if(!ret){
+    //        return;
+    //      }
+    //      var eventType = ret.eventType;
+    //      var progress = ret.progress;
+    //      if("page_over" == eventType){
+    //        api.toast({
+    //          msg:'已经是最后一页了',
+    //          duration:1000,
+    //          location:"top"
+    //        });
+    //      }
+    //      if("page_begin" == eventType){
+    //        api.toast({
+    //          msg:'已经是第一页了',
+    //          duration:1000,
+    //          location:'top'
+    //        });
+    //      }
+    //      if("page_up" == eventType || "page_down" === eventType){
+    //
+    //      }
+    //    });
+    //  }
+    //  function showBookReader(){
+    //    bookReader.open({
+    //      x: 0,
+    //      y: 0,
+    //      w: api.frameWidth,
+    //      h: api.frameHeight,
+    //      filePath:'',
+    //      animType:'',
+    //      fixed:true,
+    //      textStyle: {
+    //        size: 16,
+    //        color: "#ff0000"
+    //      }
+    //    },function(ret, err){
+    //       console.log(ret);
+    //    })
+    //  }
+    //  showBookReader();
+    // }
+</script>
+
+</html>

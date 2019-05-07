@@ -1,0 +1,39 @@
+.back{
+  /*border:1px solid black;*/
+  height:80px;
+  width:100%;
+  line-height:100px;
+}
+.back img{
+  max-height:30px;
+}
+.wrap{
+  width:100%;
+  text-align:center;
+}
+.wrap .min_wrap{
+  display:inline-block;
+  /*border:1px solid black;*/
+  width:90%;
+  margin-top:80px;
+
+}
+.wrap .min_wrap .book{
+  display:inline-block;
+  /*border:1px solid black;*/
+  height:150px;
+  width:31%;
+  overflow-x: scroll;
+  margin-left:3px;
+}
+.wrap .min_wrap .book img{
+  display:inline-block;
+  max-height:120px;
+  overflow: scroll;
+}
+.wrap .min_wrap .book span{
+  white-space:nowrap;
+  display:block;
+  overflow-x: scroll;
+
+}

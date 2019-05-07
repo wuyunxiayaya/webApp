@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" type="text/css" href="../css/api.css" />
+  <link rel="stylesheet" type="text/css" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/home/write.css">
+  <title>Document</title>
+</head>
+<body>
+  <div class="inputs">
+    <textarea class="text_input" name="name" rows="8" cols="80" placeholder="读书感言"></textarea>
+    <div class="btn">
+      <button class="cancel">取消</button>
+      <button class="sure">确定</button>
+    </div>
+  </div>
+
+</body>
+<script type="text/javascript" src="../script/api.js">
+</script>
+<script src="../script/SHA1.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script>
+  apiready = function(){
+    // cli();
+  }
+
+  function cli(){
+
+    $(".inputs .text_input").focus()
+    $api.addEvt($api.dom(".inputs .btn .cancel"), 'click', function(){
+      api.closeWin({
+        name:'write'
+      })
+    });
+    $api.addEvt($api.dom(".inputs .btn .sure"), 'click', function(){
+      api.openWin({
+        name: 'index',
+        url: '../index.html',
+        pageParam: {
+            openIndex: 2
+        }
+      })
+    });
+  }
+
+
+
+
+</script>
+</html>

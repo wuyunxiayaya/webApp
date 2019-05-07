@@ -1,0 +1,253 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>底部导航</title>
+    <link rel="stylesheet" type="text/css" href="./css/api.css" />
+    <link rel="stylesheet" type="text/css" href="./css/style.css" />
+    <style>
+        header {
+            background-color: #f2f2f2;
+        }
+        header ul li {
+            height: 40px;
+            line-height: 30px;
+            text-align: center;
+            display: none;
+            color: #323237;
+            position: relative;
+            font-size: 18px;
+        }
+
+        header ul li.active {
+            display: block;
+        }
+
+        #footer {
+            background-color: #f2f2f2;
+        }
+
+        #footer ul li {
+            padding-top: 36px;
+            padding-bottom: 4px;
+            background: url() no-repeat center 2px;
+            background-size: auto 30px;
+            text-align: center;
+        }
+
+        #footer ul li.active {
+            color: #6ab494;
+        }
+
+        #footer ul li:nth-child(1) {
+            background-image: url(./image/zhuye.png);
+        }
+
+        #footer ul li:nth-child(2) {
+            background-image: url(./image/fenlei.png);
+        }
+
+        #footer ul li:nth-child(3) {
+            background-image: url(./image/shequzhongxin.png);
+        }
+
+        #footer ul li:nth-child(4) {
+            background-image: url(./image/gerenzhongxin.png);
+        }
+
+        #footer ul li:nth-child(1).active {
+            background-image: url(./image/zhuye1.png);
+        }
+
+        #footer ul li:nth-child(2).active {
+            background-image: url(./image/fenlei1.png);
+        }
+
+        #footer ul li:nth-child(3).active {
+            background-image: url(./image/shequzhongxin1.png);
+        }
+
+        #footer ul li:nth-child(4).active {
+            background-image: url(./image/gerenzhongxin1.png);
+        }
+
+        .flex-con {
+            overflow: auto
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrap" class="flex-wrap flex-vertical">
+
+
+
+        <header>
+            <ul>
+                <li class="border-b active">主页</li>
+                <li class="border-b">分类</li>
+                <li class="border-b">社区</li>
+                <li class="border-b ">个人中心</li>
+            </ul>
+        </header>
+        <div id="main" class="flex-con">
+            <!--  -->
+        </div>
+        <div id="footer" class="border-t">
+            <ul class="flex-wrap">
+                <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con active">主页</li>
+                <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con">分类</li>
+                <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con">社区</li>
+                <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con ">个人中心</li>
+            </ul>
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="script/api.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+
+
+        $api.fixStatusBar($api.dom('header'));
+        api.setStatusBarStyle({
+            style: 'dark',
+            color: '#6ab494'
+        });
+        funIniGroup();
+    }
+    // 路由配置
+    function funIniGroup() {
+
+        var exit = api.pageParam.exit; //登陆页面的参数
+        var name = api.pageParam.name;
+        var num = api.pageParam.num;
+        var image = api.pageParam.image;
+        var openIndex = api.pageParam.openIndex;
+        console.log(openIndex)
+        console.log(image)
+        console.log(name)
+
+        // 底部导航栏 路由
+        var eHeaderLis = $api.domAll('header li'),
+            eFootLis = $api.domAll('#footer li');
+            frames = [];
+        for (var i = 0, len = eHeaderLis.length; i < len; i++) {
+            if (i == 2) {
+                frames.push({
+                    name: 'frame' + i,
+                    url: './html/frame' + i + '.html',
+                    bgColor: 'rgba(0,0,0,.2)',
+                    bounces: true
+                })
+            } else {
+                frames.push({
+                    name: 'frame' + i,
+                    url: './html/frame' + i + '.html',
+                    bgColor: 'rgba(0,0,0,.2)',
+                    // bounces: true
+                })
+            }
+        }
+        openIndex = openIndex == undefined ? 0:openIndex;
+        for(var i =0;i<eHeaderLis.length;i ++){
+          $api.removeCls(eFootLis[i], 'active');
+          $api.removeCls(eHeaderLis[i], 'active');
+        }
+        $api.addCls(eFootLis[openIndex], 'active');
+        $api.addCls(eHeaderLis[openIndex], 'active');
+        if (openIndex == 2) {
+            api.openFrameGroup({
+                name: 'group',
+                scrollEnabled: false,
+                rect: {
+                    x: 0,
+                    y: $api.dom('header').offsetHeight,
+                    w: api.winWidth,
+                    h: $api.dom('#main').offsetHeight
+                },
+                index: openIndex,
+                frames: frames,
+                // pageParam: {
+                //     exit: exit,
+                //     name: name,
+                //     num: num,
+                //     image: image
+                // }
+            }, function(ret, err) {
+
+            });
+        } else if (openIndex == 3) {
+            api.openFrameGroup({
+                name: 'group',
+                scrollEnabled: false,
+                rect: {
+                    x: 0,
+                    y: $api.dom('header').offsetHeight,
+                    w: api.winWidth,
+                    h: $api.dom('#main').offsetHeight
+                },
+                index: openIndex,
+                frames: frames,
+                pageParam: {
+                    exit: exit,
+                    name: name,
+                    num: num,
+                    image: image
+                }
+            }, function(ret, err) {
+
+            });
+        } else {
+            api.openFrameGroup({
+                name: 'group',
+                scrollEnabled: false,
+                rect: {
+                    x: 0,
+                    y: $api.dom('header').offsetHeight,
+                    w: api.winWidth,
+                    h: $api.dom('#main').offsetHeight
+                },
+                index: openIndex,
+                frames: frames,
+                // pageParam: {
+                //     exit: exit,
+                //     name: name,
+                //     num: num,
+                //     image: image
+                // }
+            }, function(ret, err) {
+
+            });
+        }
+        // 路由出口
+
+    }
+
+
+    // 随意切换按钮
+    function randomSwitchBtn(tag) {
+        if (tag == $api.dom('#footer li.active')) return;
+        var eFootLis = $api.domAll('#footer li'),
+            eHeaderLis = $api.domAll('header li'),
+            index = 0;
+        for (var i = 0, len = eFootLis.length; i < len; i++) {
+            if (tag == eFootLis[i]) {
+                index = i;
+            } else {
+                $api.removeCls(eFootLis[i], 'active');
+                $api.removeCls(eHeaderLis[i], 'active');
+            }
+        }
+        $api.addCls(eFootLis[index], 'active');
+        $api.addCls(eHeaderLis[index], 'active');
+        api.setFrameGroupIndex({
+            name: 'group',
+            index: index
+        });
+    }
+</script>

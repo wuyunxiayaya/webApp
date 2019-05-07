@@ -1,0 +1,75 @@
+.vessel,body{
+  background-color:#dde;
+}
+.recommend{
+  margin-top:80px;
+  /*border:1px solid #dde;*/
+  width:100%;
+  text-align:center;
+  /*border:1px solid red;*/
+
+}
+.back{
+  height:80px;
+  width:100%;
+  line-height:100px;
+}
+.back img{
+  max-height:30px;
+}
+.recommend .included{
+  margin:0 auto;
+
+  /*vertical-align:middle;*/
+  margin-top:10px;
+  /*line-height:100px;*/
+  display:inline-block;
+  /*justify-content: center;*/
+  align-items: center;
+  height:100px;
+  width:90%;
+  background-color:#fff;
+  /*border:1px solid red;*/
+  text-align:center;
+}
+.recommend .included div{
+  display:inline-block;
+  /*border:1px solid black;*/
+  width:30%;
+  float:left;
+}
+.recommend .included div img{
+  display:inline-block;
+  max-height:80px;
+  vertical-align:middle;
+  /*border:1px solid black;*/
+  /*margin-left:10px;*/
+}
+.recommend .included>span{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  display:inline-block;
+  width:65%;
+  height:80%;
+  float:right;
+  /*border:1px solid black;*/
+  /*font-size:bold;*/
+}
+.recommend .included span p{
+  width:100%;
+  height:80%;
+  display: -webkit-box;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow:hidden;
+  /*text-overflow:ellipsis;*/
+}
+.recommend .included span em{
+  font-weight:bold;
+  width:100%;
+  /*border:1px solid red;*/
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}

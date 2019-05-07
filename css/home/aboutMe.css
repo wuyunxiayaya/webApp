@@ -1,0 +1,79 @@
+.vessel{
+  width:100%;
+  text-align: center;
+  margin-top:30px;
+}
+.vessel .wrap{
+  position:relative;
+  display:inline-block;
+  width:90%;
+  min-height:100px;
+  border:1px solid #dde;
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  text-align: left;
+}
+.vessel .wrap .response{
+  /*border:1px solid red;*/
+  margin-left:5px;
+  height:50px;
+
+}
+.vessel .wrap .response .othername{
+  font-weight: bold;
+  font-size: 18px;
+}
+.vessel .wrap .content{
+  /*border:1px solid black;*/
+  min-height:50px;
+  margin-left:5px;
+}
+.vessel .wrap .response .recomment{
+  /*float:left;*/
+  position:absolute;
+  top:5px;
+  right:5px;
+}
+.bag{
+  display: none;
+}
+.bag .mask{
+  position:absolute;
+  top:0;
+  width:100%;
+  height:100%;
+  background-color:rgba(220, 220,220,0.5);
+  /*display:none;*/
+}
+.bag .comment_area{
+  position:fixed;
+  top:30%;
+  /*left:10%;*/
+  height:40%;
+  width:100%;
+  /*border:1px solid black;*/
+  /*text-align: center;*/
+}
+.bag .comment_area .recomment_input{
+  display:block;
+  height:40%;
+  width:80%;
+  outline: none;
+  border:1px solid	#698B69;
+  z-index: 22;
+  margin:0 auto;
+}
+.bag .comment_area button{
+  /*border:1px solid black;*/
+  z-index: 22;
+  height:30px;
+  width:20%;
+  margin-left:20%;
+}
+.bag .comment_area .cancel{
+  background-color:	#698B69;
+}
+.bag .comment_area .sure{
+  background-color:	#CD5C5C;
+}

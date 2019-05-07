@@ -1,0 +1,185 @@
+.top_title{
+ /*border:1px solid black;*/
+ height:50px;
+ width:100%;
+ line-height:50px;
+ margin-top:20px;
+}
+.top_title .left_msg{
+  /*border:1px solid black;*/
+  margin-left: 10px;
+  margin-top:20px;
+  float:left;
+  color:red;
+  /*font-size:20px;*/
+  font-weight: bold;
+}
+.top_title .right_sent{
+  /*border:1px solid black;*/
+  float:right;
+  margin-right: 10px;
+  margin-top:20px;
+}
+.top_title img{
+  max-height:30px;
+}
+.my_publish{
+
+}
+.person_info{
+  /*border:1px solid black;*/
+  vertical-align: top;
+  position:relative;
+  height:80px;
+  width:100%;
+}
+.person_info .head{
+  display:inline-block;
+  height:50px;
+  width:50px;
+  /*border:1px solid black;*/
+  border-radius:50%;
+}
+.person_info .time{
+  margin-left:50px;
+  margin-top:-10px;
+}
+.person_info .head img{
+  height:50px;
+  width:50px;
+  border-radius:50%;
+}
+.person_info .name{
+  position:absolute;
+  top:0;
+  display:inline-block;
+  /*text-align:center;*/
+  /*border:1px solid black;*/
+  height:50px;
+  line-height:50px;
+  margin-left:10px;
+  width:50%;
+}
+
+.content .recommend{
+  border:1px solid #EEEED1;
+  /*border-top:0px;*/
+  background-color:#fff;
+  margin-top:20px;
+}
+.content .recommend .included{
+  margin:0 auto;
+
+  /*vertical-align:middle;*/
+  margin-top:10px;
+  /*line-height:100px;*/
+  display:inline-block;
+  /*justify-content: center;*/
+  align-items: center;
+  /*height:100px;*/
+  width:90%;
+  background-color:#fff;
+  /*border:1px solid red;*/
+  text-align:center;
+}
+.content .recommend .included div{
+  display:inline-block;
+  /*border:1px solid black;*/
+  width:30%;
+  float:left;
+}
+
+.content .recommend .included div img{
+  display:inline-block;
+  max-height:80px;
+  vertical-align:middle;
+  /*border:1px solid black;*/
+  /*margin-left:10px;*/
+}
+.content .recommend .included span{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  display:inline-block;
+  width:65%;
+  height:80%;
+  float:right;
+  /*border:1px solid black;*/
+  /*font-size:bold;*/
+}
+.content .recommend .included span p{
+  width:100%;
+  height:80%;
+  display: -webkit-box;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow:hidden;
+  /*text-overflow:ellipsis;*/
+}
+.content .recommend .included span em{
+  font-weight:bold;
+  width:100%;
+  /*border:1px solid red;*/
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.content .recommend .person_info .shanchu{
+  /*border:1px solid black;*/
+  height:50px;
+  width:50px;
+  float:right;
+}
+.content .recommend .person_info .shanchu img{
+  max-height:30px;
+}
+
+/*删除选择*/
+.del_tip{
+  display:none;
+  /*text-align:center;*/
+  position:fixed;
+  top:40%;
+  left:10%;
+  z-index: 11;
+  border:1px solid #dde;
+  width:80%;
+  height:100px;
+  margin:0 auto;
+  border-radius:10px;
+  background-color:#fff;
+}
+.del_tip .text{
+  height:60px;
+  width:100%;
+  margin:0 auto;
+  border:1px solid #dde;
+  text-align:center;
+  line-height:60px;
+  /*background-color:#ff0;*/
+  border-top:0px;
+  border-right:0px;
+  border-left:0px;
+}
+.del_tip .btn{
+  /*border:1px solid black;*/
+  margin:0 auto;
+  height:100px;
+  width:100%;
+  /*vertical-align:bottom;*/
+}
+.del_tip .btn button{
+  outline: none;
+  height:35px;
+  width:49%;
+  border:1px solid #dde;
+  border-top:0px;
+  border-right:0px;
+  /*border-left:0px;*/
+  border-bottom:0px;
+  /*margin-left:15%;*/
+}
+.del_tip .btn .cancel{
+  border-left:0px;
+
+}

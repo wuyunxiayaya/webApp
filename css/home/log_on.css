@@ -1,0 +1,238 @@
+/*.log_on_wrap{
+  display:none;
+}*/
+.log_on{
+  /*border:1px solid black;*/
+  text-align:center;
+  /*width:90%;*/
+  margin-top:10px;;
+  line-height:30px;
+  height:30px;
+}
+.log_on img{
+  max-width:30px;
+  float:left;
+  margin-left:10px;
+}
+.log_on span{
+  /*border:1px solid red;*/
+  display:inline-block;
+  vertical-align:middle;
+  font-weight:600;
+  font-size:21px;
+}
+.tap .popup{
+  /*display:inline-block;*/
+  float:right;
+  /*border:1px solid black;*/
+  background-color:red;
+  color:#fff;
+  font-weight:bold;
+  display:none;
+}
+.tap .addPopup{
+  display:inline-block;
+}
+.mainInput{
+  position:relative;
+  /*position:relative;*/
+  text-align:center;
+  margin-top:100px;
+  /*border:1px solid black;*/
+  width:100%;
+}
+.mainInput input{
+  background-color:#fff;
+  display:inline-block;
+  height:50px;
+  width:80%;
+  border:1px solid #999;
+  background-position:0 center;
+  padding-left:25px;
+  border-top: 0px;
+  border-left:0;
+  border-right:0;
+  outline:none;
+}
+.mainInput .code{
+  width:60%;
+}
+.mainInput .get{
+  display:inline-block;
+  /*border:1px solid black;*/
+  width:20%;
+  height:50px;
+  /*vertical-align:top;*/
+  line-height:50px;
+  background-color:#f43;
+  color:#ffd;
+  font-size:12px;
+  font-weight:400;
+  /*padding-right:10px;*/
+}
+.mainInput .passW1,.mainInput .passW2{
+  background-image: url('../../image/img/mima.png');
+  background-repeat:no-repeat;
+  background-size: 20px;
+}
+.mainInput .user_name{
+  background-image: url('../../image/img/zhanghao.png');
+  /*background-image:url("../../image/img/cuowu.png");*/
+  background-repeat:no-repeat;
+  background-size: 20px;
+}
+.mainInput .phone_number,.mainInput .phone_number1{
+  background-image: url('../../image/img/icon-test.png');
+  /*background-image:url("../../image/img/cuowu.png");*/
+  background-repeat:no-repeat;
+  background-size: 20px;
+}
+.mainInput .user_email{
+  background-image: url('../../image/img/youxiang.png');
+  /*background-image:url("../../image/img/cuowu.png");*/
+  background-repeat:no-repeat;
+  background-size: 20px;
+}
+.mainInput .error,.mainInput .seccess{
+  position:absolute;
+  top:10px;
+  right:20px;
+  max-width:20px;
+  display:none;
+  /*display:inline-block;*/
+  /*background-repeat:no-repeat;*/
+}
+/*.mainInput .addError,.mainInput .addSuccess{
+  position:absolute;
+  top:10px;
+  right:20px;
+  max-width:20px;
+  display:inline-block;
+}*/
+.btn{
+  margin-top:20px;
+  /*border:1px solid black;*/
+  width:100%;
+  text-align:center;
+}
+.btn .confirm,.btn .login_click{
+  background-color:#ccc;
+  display:inline-block;
+  height:50px;
+  width:90%;
+  border-radius:10px;
+  outline:none;
+}
+
+
+
+
+
+<body>
+  <div class="empty">
+    <!-- 头部详情 -->
+
+    <div class="topDetail">
+      <div class="wrap">
+        <div class="reader"></div>
+        <div class="book">
+          <img src="../image/img/fanhui.png" alt="">
+
+          <!-- <img src="../image/img/hl.jpg" alt=""> -->
+        </div>
+        <div class="icon">
+
+          <span>作者:无名氏</span><br>
+            <span>收藏</span>
+            <img class="un_collection" src="../image/img/shoucang1.png" alt="">
+            <img class="collection" src="../image/img/collection.png" alt="">
+        </div>
+        <!-- <img class="sc" src="../image/img/shoucang1.png" alt=""> -->
+      </div>
+    </div>
+    <!-- 内容简介 -->
+    <div class="vessel">
+      <div class="brief">
+        <span class="text">
+          《红楼梦》，中国古代四大名著之一，
+          章回体长篇小说，成书于1784年
+          （清乾隆帝四十九年），梦觉主人序本正式题为
+          《红楼梦》。它的原名有《石头记》、
+          《情僧录》、《风月宝鉴》、《金陵十二钗》等。
+          前80回曹雪芹著，后40回无名氏续，程伟元、
+          高鹗整理。本书是一部具有高度思想性和高度艺术
+          性的伟大作品，作者具有初步的民主主义思想，他
+          对现实社会、宫廷、官场的黑暗，封建贵族阶级及
+          其家庭的腐朽，封建的科举、婚姻、奴婢、等级制度
+          及社会统治思想等都进行了深刻的批判
+          ，并且提出了朦胧的带有初步民主主义性质的理
+          想和主张
+        </span>
+      </div>
+    </div>
+    <!-- 回合 -->
+    <div class="round">
+      <li><a href="">第一回合:林冲棒打黄教头</a></li>
+      <!-- <li><a href="">第一回合:林冲棒打黄教头</a></li>
+      <li><a href="">第一回合:林冲棒打黄教头</a></li>
+      <li><a href="">第一回合:林冲棒打黄教头</a></li>
+      <li><a href="">第一回合:林冲棒打黄教头</a></li> -->
+      <ul class="list">
+        <li><a href="">第一回合:林冲棒打黄教头</a></li>
+        <li><a href="">第一回合:林冲棒打黄教头</a></li>
+        <li><a href="">第一回合:林冲棒打黄教头</a></li>
+        <li><a href=""></a></li>
+        <li><a href=""></a></li>
+        <li><a href=""></a></li>
+        <li><a href=""></a></li>
+        <li><a href=""></a></li>
+        <li><a href=""></a></li>
+        <li><a href=""></a></li>
+        <li><a href=""></a></li>
+        <li><a href=""></a></li>
+        <li><a href=""></a></li>
+      </ul>
+      <bottom class="btn">
+        <div class="imgText1">
+          <span>
+          展开
+          </span>
+          <img class="img1" src="../image/img/arrow_down.png" alt="">
+        </div>
+        <!-- <div class="">
+          收起
+          <img class="img2" src="../image/img/arrow_upon.png" alt="">
+        </div> -->
+      </bottom>
+    </div>
+    <!-- 今日推荐 -->
+    <div class="recomment swiper-container">
+      <span class="maxText">今日推荐</span>
+      <ul class="swiper-wrap">
+        <li class="swiper-slide">
+          <img src="../image/img/tuijian1.jpg" alt="">
+          <text>西厢记</text>
+        </li>
+        <li class="swiper-slide">
+          <img src="../image/img/tuijian2.jpg" alt="">
+          <text>天龙八部</text>
+        </li>
+        <li class="swiper-slide">
+          <img src="../image/img/tuijian3.jpg" alt="">
+          <text>天龙八部</text>
+        </li>
+        <li class="swiper-slide">
+          <img src="../image/img/tuijian4.jpg" alt="">
+          <text>天龙八部</text>
+        </li>
+        <li class="swiper-slide">
+          <img src="../image/img/tuijian3.jpg" alt="">
+          <text>天龙八部</text>
+        </li>
+        <li class="swiper-slide">
+          <img src="../image/img/tuijian4.jpg" alt="">
+          <text>天龙八部</text>
+        </li>
+      </ul>
+    </div>
+  </div>

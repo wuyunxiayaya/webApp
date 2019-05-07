@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../css/api.css">
+    <link rel="stylesheet" href="../css/api.css">
+    <link rel="stylesheet" href="../css/home/foot.css">
+    <title足迹</title>
+</head>
+
+<body>
+
+    <div class="foot">
+        <div class="nearly">
+            <img src="../image/img/back.png" alt=""> 最近浏览
+        </div>
+        <div class="wrap">
+          <div class="del">
+            <button class="delt">删除</button>
+            <button class="cancel">取消</button>
+          </div>
+            <!-- <ul class="content">
+        <div class="picture">
+          <img src="../image/img/tuijian2.jpg" alt="">
+        </div>
+        <span class="text"><em>《呐喊》| 鲁迅著名短篇小说集</em><br/>
+        <p>其实地上本没有路，走的人多了，也便成了路。
+        </p></span>
+      </ul> -->
+        </div>
+    </div>
+
+
+
+</body>
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+<script type="text/javascript" src="../script/api.js">
+</script>
+<script>
+    apiready = function() {
+        back();
+        goTo();
+        // foots();
+        foot();
+        // cli();
+
+        function toDoRequest() {
+            var connectionType = api.connectionType;
+            console.log(connectionType)
+            if (connectionType == 'none') {
+                setTimeout(function() {
+                    api.refreshHeaderLoadDone(); //复位下拉刷新
+                    api.toast({
+                        msg: '刷新失败',
+                        duration: '1000',
+                        localtion: 'middle'
+                    });
+                }, 2000)
+            } else {
+                setTimeout(function() {
+                    api.refreshHeaderLoadDone(); //复位下拉刷新
+                    api.toast({
+                        msg: '刷新成功',
+                        duration: '1000',
+                        localtion: 'middle'
+                    });
+                }, 500)
+            }
+
+        }
+    }
+
+    function back() {
+        $api.addEvt($api.dom(".foot .nearly img"), 'click', function() {
+            api.closeWin({
+                name: 'foot'
+            })
+        })
+    }
+
+    function goTo() {
+        $api.addEvt($api.dom(".foot .wrap .content"), 'click', function() {
+            api.openWin({
+                name: 'home11',
+                url: './home11.html'
+            })
+        })
+    }
+
+    function cli(self){//点击进入classify 页面
+      console.log(self)
+      console.log(JSON.stringify(self.attr("class")))
+      var bookname = self.find(".bookname").text();
+      console.log(bookname)
+      $.ajax({
+        url:'http://112.74.39.180:80/detail',
+        type:'post',
+        dataType:'json',
+        data:{
+          bookname:bookname
+        }
+      })
+      .done(function(ret){
+        console.log(JSON.stringify(ret));
+        console.log(JSON.stringify(ret.type));
+        // var type = ret.type;
+        var retAll = ret;
+        console.log(retAll)
+        // var bookname
+        api.openWin({
+          name:'classify',
+          url:'./classify.html',
+          pageParam:{
+            retAll:retAll,
+          }
+        })
+      })
+      .fail(function(err){
+        console.log(JSON.stringify(err))
+      })
+    }
+// 足迹展示
+    function foot() {
+      var userId = $api.getStorage('uid');
+      console.log(userId)
+      $.ajax({
+        url:'http://112.74.39.180:80/foot/getall',
+        type:'post',
+        dataType:'json',
+        data:{
+          userId:userId
+        }
+      })
+      .done(function(ret){
+        console.log(JSON.stringify(ret))
+        console.log(ret.status)
+        $('.collect .wrap').children().remove();
+        if(ret.status == 1){
+          var len = ret.data.length;
+          for(var i = 0; i < len; i ++){
+            $(".foot .wrap").prepend(
+                `<div id="holder" class="top">
+                <ul onclick="cli($(this))" class="content">
+        <div class="picture">
+        <img src="${ret.data[i].bImg}" alt="">
+        </div>
+        <span class="text"><em>《<span class="bookname">${ret.data[i].bName}</span>》| ${ret.data[i].bAuthor}</em><br/>
+        <p>${ret.data[i].bIntro}
+        </p></span>
+        </ul>
+        </div>`
+            );
+        }
+      }else{
+
+        }
+      })
+      .fail(function(err){
+        console.log(JSON.stringify(err))
+      })
+}
+
+    // function foots() {
+    //     var username = $api.getStorage('username');
+    //     console.log(username)
+    //     var model = initConfig();
+    //     var query = api.require("query");
+    //     query.createQuery(function(ret, err) {
+    //         if (ret) {
+    //             var queryId = ret.qid;
+    //             query.whereEqual({
+    //                 qid: queryId,
+    //                 value: username,
+    //                 column: 'username'
+    //             });
+    //             model.findAll({
+    //                 class: 'user',
+    //                 qid: queryId
+    //             }, function(ret, err) {
+    //                 if (ret) {
+    //                     console.log(JSON.stringify(ret))
+    //                     var uid = ret[0].id;
+    //                     var relation = api.require("relation");
+    //                     relation.findAll({
+    //                         class: 'user',
+    //                         id: uid,
+    //                         column: 'foot'
+    //                     }, function(ret, err) {
+    //                         console.log(JSON.stringify(ret))
+    //                         var len = ret.length;
+    //                         for (var i = 0; i < len; i++) {
+    //                           long_acting(i,ret);
+    //                             $(".foot .wrap").prepend(
+    //                                 `<div id="holder" class="top">
+    //                                 <ul class="content">
+    //                         <div class="picture">
+    //                         <img src="${ret[i].foot_img}" alt="">
+    //                         </div>
+    //                         <span class="text"><em>《${ret[i].foot_name}》| ${ret[i].foot_author}</em><br/>
+    //                         <p>${ret[i].foot_intro}
+    //                         </p></span>
+    //                         </ul>
+    //                         </div>`
+    //                             );
+    //
+    //
+    //                             $(".wrap").eq(i).on('click', '.top', function() {
+    //                               $(".foot .wrap .del").css({'display':'none'})
+    //                                 console.log($(this).index())
+    //                                 console.log(ret.length - $(this).index())
+    //                                 var index = ret.length - $(this).index() - 1;
+    //                                 var val = ret[index].foot_name;
+    //                                 // console.log($(this).text())
+    //                                 api.openWin({
+    //                                     name: 'classify',
+    //                                     url: './classify.html',
+    //                                     pageParam: {
+    //                                         val: val
+    //                                     }
+    //                                 })
+    //                             })
+    //                         }
+    //                     });
+    //                 } else {}
+    //             });
+    //         } else {}
+    //     });
+    // }
+
+    function long_acting(c,ret) {//点击取消，删除
+      var username = $api.getStorage('username');//本地用户
+      $(".wrap").eq(c).on("taphold",'.top', function() {//长按列表
+          var index = ret.length - $(this).index() - 1;
+          // alert(index)
+          // alert(ret[index].foot_name)
+          $(".foot .wrap .del").css({'display':'inline-block'});
+      });
+
+      $(".foot .wrap .del .delt").on('click',function(e){//删除
+        var index = ret.length - $(this).index() - 1;
+        var footname_del = ret[index].foot_name;
+        $(".foot .wrap .del").css({'display':'none'});
+        var model = initConfig();
+        var query = api.require('query');
+        query.createQuery(function(ret,err){
+        	if(ret){
+            var qid = ret.qid;
+            query.whereEqual({
+                qid: qid,
+                value: username,
+                column: 'username'
+            });
+            model.findAll({
+                class: 'user',
+                qid: qid
+            },function(ret,err){
+              if(ret.length !== 0){
+                var id = ret[0].id;
+                var relation = api.require('relation');
+                relation.findAll({
+                  class:'user',
+                  id:id,
+                  column:'foot'
+                },function(ret,err){
+                    if(ret){
+                      var relId = ret[0].id;
+                      model.deleteById({
+                          class: 'foot',
+                          id: relId
+                      },function(ret,err){
+                        if(ret){
+                          location.reload();
+                          // toast()
+                          api.toast({
+                              msg: '删除成功',
+                              duration: '1000',
+                              localtion: 'middle'
+                          });
+                          console.log(JSON.stringify(ret))
+                        }
+
+                      });
+
+                    }
+                });
+
+              }
+            });
+
+
+
+
+          }
+        });
+
+      })
+      $(".foot .wrap .del .cancel").on('click',function(e){//取消
+        $(".foot .wrap .del").css({'display':'none'})
+
+      })
+    }
+</script>
+
+</html>

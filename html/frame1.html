@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>分类</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/home/frame1.css">
+    <script src="../script/echo.min.js"></script>
+
+</head>
+
+<body>
+    <div class="empty">
+        <!-- 左边分类 -->
+        <div class="left">
+             <ul class="list" id="lists">
+
+            </ul>
+        </div>
+        <!--右边展示栏  -->
+        <div class="right" id="rights">
+
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js">
+</script>
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script>
+    apiready = function() {
+        titleList();  //  获取左边大分类与大分类第一个分类的数据
+    }
+    function initApiCloud() {
+        var model = api.require('model'); //model对象
+        model.config({
+            appId: 'A6007193486393',
+            appKey: '6AC0DC07-3FF1-FA88-F56D-CF7BC56F280E',
+            host: 'https://d.apicloud.com' //固定地址
+        });
+        return model;
+    }
+    // 初始化数据
+    var data = '';
+    var flag = false;
+    // 添加左边点击事件
+    function initEvent(){
+        $(".left").on('click','li',function(){
+            if($(this).hasClass("titleActive") || flag) return;  // 当前页面再次点击返回return;
+            flag = true
+            data = ''
+            $(".right").children().remove();   // 添加数据前清除上次的数据
+            $(this).addClass("titleActive").siblings().removeClass("titleActive")  // 添加颜色样式
+            getSelect($(this).text())  // 传入左边分类名称
+
+      })
+    }
+
+    // 获取左边数据，传入分类名称
+    function titleList(classify) {
+      $.ajax({
+              url: 'http://112.74.39.180:80/fenlei',//获取左边列表
+              type: 'get',
+              dataType: 'json',
+          })
+          .done(function(res) { //不支持延续任务的调用
+            getLeft(1);//默认获取展示右边第一类
+              console.log("Ds" + JSON.stringify(res));
+              console.log(JSON.stringify(res[0]))
+              var len = res.length;
+              for(var i = 0; i < len; i ++){
+                 $api.append($api.dom(".left .list"), `<li data-id="${res[i].descid}"
+                 onclick="getLeft(${res[i].descid},$(this))" class="lis">${res[i].classify}</li>`)
+              };
+              $(".left .list li").eq(0).addClass("titleActive");//给左边第一个列表添加样式
+          })
+          .fail(function(err) {
+              console.log('error' + JSON.stringify(err));
+          });
+    }
+
+    function getLeft(index,self){
+      if(self){
+        //给左边列表添加点击样式
+        console.log(self)
+        if(self.hasClass("titleActive")) return;  // 当前页面再次点击返回return;
+        console.log(self)
+        $(".right").children().remove();
+        self.addClass("titleActive").siblings().removeClass("titleActive")  // 添加颜色样式
+        // getSelect(self.text())  // 传入左边分类名称
+      }
+// 右边列表
+      $.ajax({
+              url: 'http://112.74.39.180:80/fenlei/right',//获取右边列表
+              type: 'post',
+              dataType: 'json',
+              async:true,
+              data:{
+                "id":index  //传入id
+              }
+          })
+          .done(function(res) { //不支持延续任务的调用
+              console.log("Ds" + JSON.stringify(res));
+              console.log(JSON.stringify(res[0]))
+              var len = res.length;
+              var numlen = 20;
+              var data = res;
+              // 右边的列表
+              $(".right").children().remove();
+              $("body,html").scrollTop(0)
+              for(var i = 0; i < numlen; i ++){//添加右边书籍展示
+                $(".right").append(
+                    `<div onclick="cliRight($(this))" class="titLeft">
+                    <img src="${res[i].url}" onerror="javascript:this.src='../image/img/hl.jpg'" alt="">
+                    <span>${res[i].name}</span>
+                  </div>`
+                );
+              }
+              lazy(data,numlen);//懒加载
+          })
+          .fail(function(err) {
+              console.log('error' + JSON.stringify(err));
+          });
+    }
+    function showList(data,listNum){
+      data = data;
+      var m = $api.domAll(".right .titLeft").length;//获取右边样式框长度
+      // console.log(JSON.stringify(data))
+      var len = data.length;//获取右边数据长度
+      // console.log(JSON.stringify(len))
+      if(m==len){
+        $api.toast("已经到底了");
+        return;
+      }else{
+        $api.toast("拼命加载中");
+        var n = 20;
+        n = listNum + m;//listNum = 20
+        n = n >= len ? len:n;
+        for(var i = m;i < n;i ++){
+          $(".right").append(
+              `<div onclick="cliRight($(this))" class="titLeft">
+              <img src="${data[i].url}" alt="">
+              <span>${data[i].name}</span>
+            </div>`
+          );
+        }
+      }
+    }
+    function lazy(data,listNum){
+      var divscroll = document.getElementById('rights');
+    $api.addEvt(divscroll, 'scroll',function(){    // 底部懒加载，上拉加载
+       var scrollTop = divscroll.scrollTop; //页面上卷的高度
+       var wholeHeight = divscroll.scrollHeight; //页面底部到顶部的距离
+       var divHeight = divscroll.clientHeight; //页面可视区域的高度
+       if (scrollTop + divHeight >= wholeHeight) {
+         console.log(JSON.stringify(data))
+         console.log(listNum)
+           showList(data,listNum)
+       }
+       if (scrollTop == 0) {
+           $api.toast('已经是最顶部');
+       }
+     });
+    }
+    function cliRight(self){//点击右边获取数据传到下一个界面
+      console.log(JSON.stringify(self.children("span").text()));
+      var bookname = self.children("span").text();
+      console.log(bookname)
+      $.ajax({
+        url:'http://112.74.39.180:80/detail',
+        type:'post',
+        dataType:'json',
+        data:{
+          bookname:bookname
+        }
+      })
+      .done(function(ret){
+        console.log(JSON.stringify(ret));
+        console.log(JSON.stringify(ret.type));
+        // var type = ret.type;
+        var retAll = ret;
+        console.log(retAll)
+        // var bookname
+        api.openWin({
+          name:'classify',
+          url:'./classify.html',
+          pageParam:{
+            retAll:retAll,
+          }
+        })
+      })
+      .fail(function(err){
+        console.log(JSON.stringify(err))
+      })
+    }
+
+</script>
+
+</html>

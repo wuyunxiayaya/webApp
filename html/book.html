@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>名书</title>
+    <link rel="stylesheet" href="../css/api.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/home/book.css">
+</head>
+
+<body>
+
+  <header style="position:fixed;width:100%;font-size:21px;color:#f50;height:50px;background-color:#dde;text-align:center;line-height:50px;padding-top:20px;">书名</header>
+  <div style="position:fixed;" class="back">
+      <img src="../image/img/back.png" alt="">
+  </div>
+    <div class="wrap">
+        <div class="min_wrap">
+        </div>
+    </div>
+
+
+
+
+
+
+
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="../script/api.js"></script>
+    <script>
+        apiready = function() {
+            back();
+            my_book();
+        }
+
+        function back() {
+            $api.addEvt($api.dom(".back img"), 'click', function() {
+                api.closeWin({
+                    name: 'book'
+                })
+            })
+
+        }
+
+        function initConfig() {
+            var model = api.require('model');
+            model.config({
+                appId: 'A6007193486393',
+                appKey: '6AC0DC07-3FF1-FA88-F56D-CF7BC56F280E',
+                host: 'https://d.apicloud.com'
+            })
+            return model;
+        }
+
+        function my_book() {
+            var text = api.pageParam.text;
+            console.log(text)
+            var model = initConfig();
+            var query = api.require("query");
+            query.createQuery(function(ret, err) {
+                if (ret) {
+                    console.log(JSON.stringify(ret))
+                    var queryId = ret.qid;
+                    query.whereEqual({
+                        qid: queryId,
+                        column: 'fenlei',
+                        value: text
+                    })
+                    model.findAll({
+                        qid: queryId,
+                        class: 'test_bigClassify'
+                    }, function(ret, err) {
+                        if (ret) {
+                            console.log(JSON.stringify(ret))
+                            console.log(ret.length)
+                            console.log(JSON.stringify(ret[0].fenlei_desc))
+                            console.log(ret.length)
+                            console.log(ret[0].fenlei_desc.length)
+
+                            console.log(JSON.stringify(ret[0].fenlei_desc[0].fenlei_desc_title))
+                            var len = ret[0].fenlei_desc.length;
+                            for (var i = 0; i < len; i++) {
+                                $(".wrap .min_wrap").append(
+                                    `<div class="book" onclick="getBook($(this))">
+                      <img src="${ret[0].fenlei_desc[i].fenlei_desc_url}" alt="" />
+                      <span>${ret[0].fenlei_desc[i].fenlei_desc_title}</span></div>`)
+
+
+                            }
+                            // console.log(JSON.stringify(ret[0].))
+
+                        } else {
+                            console.log(err + 'aaa')
+                        }
+                    })
+                } else {
+                    console.log('sss')
+                }
+            })
+        }
+
+        function getBook(target){
+          // console.log($(this).index())
+          alert(target.text())
+          var bookName = target.text();
+          alert(bookName)
+          api.openWin({
+            name:'classify',
+            url:'./classify.html',
+            pageParam:{
+              val:bookName
+            }
+
+          })
+        }
+    </script>
+
+
+
+</body>
+
+</html>
