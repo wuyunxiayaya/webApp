@@ -63,10 +63,10 @@
   vertical-align:middle;
 }
 /*轮播图样式*/
-.swipe-wrapper{
+.vessel{
   position:relative;
-  height:100px;
-  width:180;
+  /*height:1000px;
+  width:10000px;*/
   /*border:1px solid red;*/
   /*white-space:nowrap;
   overflow:hidden;*/
@@ -98,15 +98,22 @@
 }
 .mainCircle1 ul li .text,.mainCircle2 ul li .text,.mainCircle3 ul li .text,.mainCircle4 ul li .text{
   display:inline-block;
+   /*width:10%;
+   height:10%;*/
   white-space:normal;
   text-shadow:2px 2px 2px #ff0;
   /*border:1px solid black;*/
   margin-top:15px;
   height:120px;
   width:50%;
-  font-size:23px;
+  font-size:18px;
   font-weight:bold;
   overflow: hidden;
+  display: -webkit-box;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  /*overflow:hidden;*/
 }
 .mainCircle2 ul li .text{
   text-shadow:1px 2px 2px #dd0;
@@ -124,12 +131,18 @@
   font-size:18px;
 }
 .mainCircle1 img,.mainCircle2 img,.mainCircle4 img{
+  position:absolute;
+  top:5px;
+  right:10%;
   max-height:100px;
   margin-top:15px;
   vertical-align:top;
-
+  display: inline-block;
 }
 .mainCircle3 img{
+  position:absolute;
+  top:5px;
+  right:10%;
   max-height:80px;
   margin-top:15px;
   vertical-align:top;
