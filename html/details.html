@@ -63,10 +63,10 @@
                 <li></li>
 
             </ul>
-            <bottom onclick="showdesc()" class="btn">
+            <bottom onclick="" class="btn">
                 <div class="imgText1">
                     <span>
-          展开查看所有章节
+          正在加载中...
           </span>
                     <img class="img1" src="../image/img/arrow_down.png" alt="">
                 </div>
@@ -199,7 +199,8 @@
                         // alert(JSON.stringify('readret'));
                         rebookList = ret.data;
                         rebookflag = true;
-                        showdesc();
+                        $api.css($api.dom(".empty .round .list"), 'display:block');
+                        $api.css($api.dom(".btn"), 'display:none');
                         // alert(JSON.stringify(rebookList));
                     } else {
                       // alert("meiyou")
@@ -264,8 +265,9 @@
                                                                 // alert(JSON.stringify('readret'));
                                                                 rebookflag = true;
                                                                 rebookList = ret.data;
-                                                                showdesc();
-                                                                // alert(JSON.stringify('downok4'))
+                                                                $api.css($api.dom(".empty .round .list"), 'display:block');
+                                                                $api.css($api.dom(".btn"), 'display:none');
+
 
                                                                 fs.rmdir({
                                                                     path: toPath
