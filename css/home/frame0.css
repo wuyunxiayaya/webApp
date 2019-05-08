@@ -128,10 +128,12 @@
   width:55%;
 }
 .mainCircle1 ul li .text p,.mainCircle2 ul li .text p,.mainCircle3 ul li .text p,.mainCircle4 ul li .text p{
-  font-size:18px;
+  font-size:15px;
+  white-space:  nowrap ;
 }
 .mainCircle1 img,.mainCircle2 img,.mainCircle4 img{
   position:absolute;
+  display:inline-block;
   top:5px;
   right:10%;
   max-height:100px;

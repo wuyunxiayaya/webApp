@@ -226,13 +226,12 @@
                 for (var n = len; n < res.length; n++) {//轮播图数据
 
                   var intros = res[n].intro.slice(0,30)+'...';
-                      intros = $api.trim(intros);
                     $(".swiper-container .vessel").append(
                         `
                       <div onclick="cli($(this))" class="swiper-slide mainCircle1">
                           <ul>
                               <li class="hl">
-                                  <span class="text">${intros}<br/></span>
+                                  <span class="text">${intros}<br/>《<p style="display:inline-block;" class="interbookname">${res[n].name}</p>》</span>
                                   <img src="${res[n].img}" alt="">
                               </li>
                           </ul>
