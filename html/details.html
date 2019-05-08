@@ -115,6 +115,7 @@
 
     <script>
         apiready = function() {
+
           brieft();
             // backPage();
             downloadBook();
@@ -132,11 +133,11 @@
           name: 'brieft'
       }, function(ret, err){
           if( ret ){
-            alert("list1 brief")
+            // alert("list1 brief")
                brief();
-               alert("list2 brief")
+              //  alert("list2 brief")
           }else{
-               alert( JSON.stringify( err ) );
+              //  alert( JSON.stringify( err ) );
           }
       });
         }
@@ -174,8 +175,8 @@
             // alert(index)
 
               var theBook = $api.getStorage('theBook');
-              alert(theBook)
-              alert('theBook')
+              // alert(theBook)
+              // alert('theBook')
               // alert(theBook)
               theBook = $api.trim(theBook);
             // theBook = '三国演义';
@@ -188,28 +189,29 @@
                 fs.readDir({
                     path: toPathed
                 }, function(ret, err) {
-                  alert(JSON.stringify("redir"))
-                  alert(JSON.stringify(ret))
-                  alert(JSON.stringify(err))
+                  // alert(JSON.stringify("redir"))
+                  // alert(JSON.stringify(ret))
+                  // alert(JSON.stringify(err))
                     if (ret.status) {
-                      alert(JSON.stringify('f1'))
+                      // alert(JSON.stringify('f1'))
 
                       // alert(JSON.stringify(ret.data));
                         // alert(JSON.stringify('readret'));
                         rebookList = ret.data;
                         rebookflag = true;
+                        showdesc();
                         // alert(JSON.stringify(rebookList));
                     } else {
                       // alert("meiyou")
                       // alert(JSON.stringify(rebookList));
-                      alert(JSON.stringify('f2'))
+                      // alert(JSON.stringify('f2'))
 
                       // alert(JSON.stringify(rebookList));
                         var theBookZip = theBook + '.zip';
                         var model = initConfig();
                         var query = api.require("query");
                         query.createQuery(function(ret, err) {
-                          alert(JSON.stringify('f3'))
+                          // alert(JSON.stringify('f3'))
 
                             var queryId = ret.qid;
                             query.whereEqual({
@@ -221,25 +223,25 @@
                                 qid: queryId,
                                 class: "file"
                             }, function(ret, err) {
-                              alert(JSON.stringify('f4'))
+                              // alert(JSON.stringify('f4'))
 
                                 if (ret) {
                                     console.log(JSON.stringify(ret))
                                     if (ret.length !== 0) {
-                                      alert(JSON.stringify('f5'))
+                                      // alert(JSON.stringify('f5'))
 
                                         var bkurl = ret[0].url;
                                         api.download({
                                             url: bkurl,
                                             savePath: toPath,
                                         }, function(ret, err) {
-                                          alert(JSON.stringify('f1'))
+                                          // alert(JSON.stringify('f1'))
 
                                             console.log(toPathed + 'toPathed')
                                             if (ret) {
-                                              alert(JSON.stringify('f2'))
+                                              // alert(JSON.stringify('f2'))
 
-                                                alert(JSON.stringify('downok'))
+                                                // alert(JSON.stringify('downok'))
                                                 var zip = api.require('zip');
                                                 zip.unarchive({
                                                     file: toPath,
@@ -247,7 +249,7 @@
                                                 }, function(ret, err) {
                                                   console.log(JSON.stringify('downok1'))
                                                     if (ret.status) {
-                                                      alert(JSON.stringify('downok2'))
+                                                      // alert(JSON.stringify('downok2'))
                                                       console.log(JSON.stringify(toPathed))
                                                       console.log(JSON.stringify(toPath))
                                                         fs.readDir({
@@ -255,14 +257,14 @@
                                                         }, function(ret, err) {
                                                           console.log(JSON.stringify('downo3k'))
                                                           console.log(JSON.stringify(ret))
-                                                          alert(JSON.stringify('downo3k'))
+                                                          // alert(JSON.stringify('downo3k'))
 
-                                                          alert(JSON.stringify(ret))
+                                                          // alert(JSON.stringify(ret))
                                                             if (ret.status) {
                                                                 // alert(JSON.stringify('readret'));
                                                                 rebookflag = true;
                                                                 rebookList = ret.data;
-                                                                alert(JSON.stringify('downok4'))
+                                                                // alert(JSON.stringify('downok4'))
 
                                                                 fs.rmdir({
                                                                     path: toPath
@@ -277,7 +279,7 @@
                                                 });
 
                                             }else{
-                                              alert(JSON.stringify('ef1'))
+                                              // alert(JSON.stringify('ef1'))
 
                                             }
                                         });
@@ -361,8 +363,18 @@
         function cli() {
             // 转发
             // $api.addEvt($api.dom(".icon span .forward"), 'click', function() {//点击转发按钮
-                $(".write").show();//输入框出现
-                $(".write textarea").focus();//聚焦
+            if(username !== undefined){
+              $(".write").show();//输入框出现
+              $(".write textarea").focus();//聚焦
+            }else{
+              api.toast({
+                  msg: '请先登陆',
+                  duration: 2000,
+                  location: 'bottom'
+              });
+
+            }
+
 
 
                 // $(".empty").hide();
@@ -374,6 +386,7 @@
           // })
         }
         function showdesc(){
+          if(rebookflag == true){
           // $api.addEvt($api.dom(".empty .round .btn"), 'click', function() { //点击展开收起按钮
               if ($api.attr($api.dom(".empty .round .btn img"), 'src') == '../image/img/arrow_down.png') {
                   $api.css($api.dom(".empty .round .list"), 'display:block');
@@ -386,7 +399,17 @@
                   $api.attr($api.dom(".empty .round .btn img"), "src", '../image/img/arrow_down.png');
               }
           // });
+        }else{
+          api.toast({
+              msg: '正在加载',
+              duration: 2000,
+              location: 'bottom'
+          });
+
+
         }
+      }
+
         // 查询数据库中此用户是否收藏了此书
         function collectGet(){//新建查询
           var userId = $api.getStorage('uid');//用户id
@@ -450,8 +473,10 @@
             $api.css($api.dom(".empty .topDetail .wrap .icon .collection"), 'display:none'); //红心
             $api.css($api.dom(".empty .topDetail .wrap .icon .un_collection"), 'display:inline-block'); //灰心v
         }
+        var username = $api.getStorage('username');
         // 收藏
         function collecter() {
+          if(username !== undefined){
             $api.css($api.dom(".empty .topDetail .wrap .icon .collection"), 'display:inline-block'); //红心
             $api.css($api.dom(".empty .topDetail .wrap .icon .un_collection"), 'display:none'); //灰心
             var userId = $api.getStorage('uid');
@@ -494,6 +519,15 @@
                 .fail(function(err) {
                     console.log(JSON.stringify(err))
                 })
+          }else{
+            api.toast({
+                msg: '请先登录',
+                duration: 2000,
+                location: 'bottom'
+            });
+
+          }
+
         }
 
         function foot(){//足迹
@@ -548,8 +582,8 @@
             var theBook = $api.getStorage('theBook');
             console.log(theBook)
             console.log(JSON.stringify(rebookList))
-            alert(JSON.stringify(rebookList))
-            alert(JSON.stringify(rebookflag))
+            // alert(JSON.stringify(rebookList))
+            // alert(JSON.stringify(rebookflag))
             console.log(JSON.stringify(rebookflag))
             theBook = $api.trim(theBook);
             var bookLength = rebookList.length;

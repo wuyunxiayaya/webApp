@@ -24,12 +24,13 @@
 
     </div>
     <div class="del_tip">
-      <div class="text">确定要删除吗？</div>
-      <div class="btn">
-        <!-- 删除？ -->
-        <button class="cancel">取消</button>
-        <button class="sure">确认</button>
-    </div></div>
+        <div class="text">确定要删除吗？</div>
+        <div class="btn">
+            <!-- 删除？ -->
+            <button class="cancel">取消</button>
+            <button class="sure">确认</button>
+        </div>
+    </div>
 
 
 </body>
@@ -40,29 +41,30 @@
 <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 <script>
     apiready = function() {
-      // click()
-      publishList();
-      publish();//未读消息提示
+        // click()
+        publishList();
+        publish(); //未读消息提示
     }
 
-    function publishList() {//展示社区
-      var userid = $api.getStorage('uid');
-      console.log(userid)
-      $.ajax({
-        url:'http://112.74.39.180:80/community',
-        type:'post',
-        dataType:'json',
-        data:{
-          userid:userid
-        }
-      })
-      .done(function(ret){
-        console.log(JSON.stringify(ret))
-        if(ret.data){
-          var len = ret.data.length;
-            $(".content").children().remove()
-          for(var i = 0; i < len; i ++){
-            $(".content").prepend(  `
+    function publishList() { //展示社区
+        var userid = $api.getStorage('uid');
+        console.log(userid)
+        $.ajax({
+                url: 'http://112.74.39.180:80/community',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    userid: userid
+                }
+            })
+            .done(function(ret) {
+                console.log(JSON.stringify(ret))
+                if (ret.data) {
+                    var len = ret.data.length;
+                    $(".content").children().remove()
+                    for (var i = 0; i < len; i++) {
+                        $(".content").prepend(
+                            `
     <div class="recommend">${ret.data[i].id}
         <div class="person_info">
             <div class="shanchu"><img data-id="${ret.data[i].id}" onclick="delclick($(this))" class="del" src="../image/img/shanchu1.png" alt="" /></div>
@@ -73,60 +75,93 @@
             <div class="time">${ret.data[i].createdTime}</div>
         </div>
         <div class="text">${ret.data[i].text}</div>
-        <div class="included">
+        <div onclick="intercls($(this))" class="included">
             <div>
                 <img src="${ret.data[i].img}" alt="" />
             </div><span><em>
-                                                  《<text>${ret.data[i].bname}</text>》| ${ret.data[i].author}
+                                                  《<text class="bookname">${ret.data[i].bname}</text>》| ${ret.data[i].author}
                                                   </em><br /><p>${ret.data[i].biref}</p></span></div>
         <div class="person_point">
             <span class="up"><i></i></span>
         </div>
-    </div>` )
-          }
-        }
+    </div>`
+                        )
+                    }
+                }
 
+            })
+            .fail(function(err) {
+                console.log(JSON.stringify(err))
+            })
+    }
+    function intercls(self){//进入分类界面classify
+      console.log(self)
+      console.log(JSON.stringify(self.attr("class")))
+      var bookname = self.find(".bookname").text();
+      console.log(bookname)
+      $.ajax({
+        url:'http://112.74.39.180:80/detail',
+        type:'post',
+        dataType:'json',
+        data:{
+          bookname:bookname
+        }
+      })
+      .done(function(ret){
+        console.log(JSON.stringify(ret));
+        console.log(JSON.stringify(ret.type));
+        // var type = ret.type;
+        var retAll = ret;
+        console.log(retAll)
+        // var bookname
+        api.openWin({
+          name:'classify',
+          url:'./classify.html',
+          pageParam:{
+            retAll:retAll,
+          }
+        })
       })
       .fail(function(err){
         console.log(JSON.stringify(err))
       })
     }
-    function delclick(self){
-      var e = event || window.event;
-      e.stopPropagation;
+    function delclick(self) {
+        var e = event || window.event;
+        e.stopPropagation;
 
-      var deleted = self.attr('data-id')
-      console.log(deleted)
-      // var
-      // $(".content").on('click','.del',function(){
-          $api.css($api.dom(".del_tip"),'display:block');
-          $(".del_tip .btn .cancel").on('click',function(){
-            $api.css($api.dom(".del_tip"),'display:none');
-          })
-          $(".del_tip .btn .sure").on('click',function(){
+        var deleted = self.attr('data-id')
+        console.log(deleted)
+            // var
+            // $(".content").on('click','.del',function(){
+        $api.css($api.dom(".del_tip"), 'display:block');
+        $(".del_tip .btn .cancel").on('click', function() {
+            $api.css($api.dom(".del_tip"), 'display:none');
+        })
+        $(".del_tip .btn .sure").on('click', function() {
             $.ajax({
-              url:'http://112.74.39.180:80/community/del',
-              type:'post',
-              dataType:'json',
-              data:{
-                deleted:deleted
-              }
-            })
-            .done(function(ret){
-              console.log(JSON.stringify(ret))
-              publishList();
-            })
-            .fail(function(err){
-              console.log(JSON.stringify(err))
-            })
-            $api.css($api.dom(".del_tip"),'display:none');
-          })
+                    url: 'http://112.74.39.180:80/community/del',
+                    type: 'post',
+                    dataType: 'json',
+                    data: {
+                        deleted: deleted
+                    }
+                })
+                .done(function(ret) {
+                    console.log(JSON.stringify(ret))
+                    publishList();
+                })
+                .fail(function(err) {
+                    console.log(JSON.stringify(err))
+                })
+            $api.css($api.dom(".del_tip"), 'display:none');
+        })
 
     }
-    var msgname;//转发的书本
-    var msgtext;//转发时说的内容
-    var msgid = [];//新建未读消息空数组
-    function publish() {//未读消息
+    var msgname; //转发的书本
+    var msgtext; //转发时说的内容
+    var msgid = []; //新建未读消息空数组
+    function publish() { //未读消息
         var userid = $api.getStorage('uid');
         console.log(userid)
         $.ajax({
@@ -143,9 +178,9 @@
                 if (ret.data) {
                     var len = ret.data.length;
                     for (let i = 0; i < len; i++) {
-                       num += parseInt(ret.data[i].noread);
-                       msgid.push(ret.data[i]);
-                      //  msgname
+                        num += parseInt(ret.data[i].noread);
+                        msgid.push(ret.data[i]);
+                        //  msgname
                     };
                     $(".left_msg span").text(num);
                     console.log(num)
@@ -154,18 +189,19 @@
             .fail(function(err) {
                 console.log(JSON.stringify(err))
             })
-          }
-        function msg(){//点击进入未读消息
-          // $(".left_msg span").text().remove();
-          console.log(msgid)
-          api.openWin({
-            name:'aboutMe',
-            url:'./aboutMe.html',
-            pageParam:{
-              msgid:msgid
+    }
+
+    function msg() { //点击进入未读消息
+        // $(".left_msg span").text().remove();
+        console.log(msgid)
+        api.openWin({
+            name: 'aboutMe',
+            url: './aboutMe.html',
+            pageParam: {
+                msgid: msgid
             }
-          })
-        }
+        })
+    }
 </script>
 
 </html>

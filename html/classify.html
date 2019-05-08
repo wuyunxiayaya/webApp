@@ -52,7 +52,6 @@
         });
 
     }
-
     function close() {
         $api.addEvt($api.dom(".back img"), 'click', function() {
             api.closeWin({
@@ -129,7 +128,7 @@
         var intro = self.children("p").text();
         console.log(img)
         console.log(intro)
-        alert(id)
+        // alert(id)
         api.openWin({
             name: 'details',
             url: './details.html',
@@ -159,7 +158,7 @@
         var img = self.children("img").attr("src");
         var intro = self.children("p").text();
         console.log(img)
-        alert(id)
+        // alert(id)
         console.log(intro)
         api.openWin({
             name: 'details',

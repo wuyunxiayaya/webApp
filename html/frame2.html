@@ -16,7 +16,7 @@
     <div class="content">
         <div class="input_wrape">
             <textarea class="inputs" name="name" rows="8" cols="80" placeholder="说出你的想法"></textarea>
-            <button onclick="commentSure()" class="sure">确认</button><button class="cancel">取消</button>
+            <button onclick="commentSure()" class="sure">确认</button><button onclick="clickcancel()" class="cancel">取消</button>
         </div>
 
         <div class="comment_list" style="margin-bottom:20px;">
@@ -46,8 +46,8 @@
 
 <script>
     apiready = function() {
-      // dianzan();//点赞
-            getComentData(0, 5, 1)
+            // dianzan();//点赞
+            getComentData(0, 15, 1)
                 // head()
             api.setRefreshHeaderInfo({
                 visible: true,
@@ -57,12 +57,12 @@
                 textUp: '释放刷新'
             }, function(ret, err) {
                 toDoRequest();
-                getComentData(0, 5, 1)
+                getComentData(0, 15, 1)
 
             });
             // initList()
             // clickUp();
-            click();
+            // click();
             // person_publish();
 
 
@@ -92,12 +92,15 @@
         }
     }
 
-    function click() {//点击
-        $(".content .input_wrape .cancel").on('click', function() { //点击取消输入框消失
-            $(".input_wrape").css({
+    function clickcancel() { //点击
+        // $(".content .input_wrape .cancel").on('click', function() { //点击取消输入框消失
+        $(".input_wrape").css({
                 "display": "none"
             })
-        });
+            // });
+    }
+
+    function loginoutd() {
         var username = $api.getStorage('username') //判断已登陆
         if (username == undefined) {
             $(".content").css({
@@ -112,34 +115,37 @@
             getComentData(0, 5, 1)
         }
     }
-    function dianzan(self){//点赞
-      if(self.children("i").hasClass("up1")){
-        api.toast({
-            msg: '您已经点过赞',
-            duration: '1000',
-            localtion: 'middle'
-        });
-      }
-      self.children("i").addClass("up1");
-      console.log(self)
-      var dianzanId = self.parents(".recommend").attr('data-id')
-      console.log(dianzanId)
-      $.ajax({
-        url:'http://112.74.39.180:80/dianzan',
-        type:'post',
-        dataType:'JSON',
-        data:{
-          dianzanId:dianzanId
+
+
+    function dianzan(self) { //点赞
+        if (self.children("i").hasClass("up1")) {
+            api.toast({
+                msg: '您已经点过赞',
+                duration: '1000',
+                localtion: 'middle'
+            });
         }
-      })
-      .done(function(ret){
-        console.log(JSON.stringify(ret))
-        // if()
-      })
-      .fail(function(err){
-        console.log(err)
-      })
+        self.children("i").addClass("up1");
+        console.log(self)
+        var dianzanId = self.parents(".recommend").attr('data-id')
+        console.log(dianzanId)
+        $.ajax({
+                url: 'http://112.74.39.180:80/dianzan',
+                type: 'post',
+                dataType: 'JSON',
+                data: {
+                    dianzanId: dianzanId
+                }
+            })
+            .done(function(ret) {
+                console.log(JSON.stringify(ret))
+                    // if()
+            })
+            .fail(function(err) {
+                console.log(err)
+            })
     }
+
     function getComentData(readly, alzy, type) {
         $.ajax({
                 url: 'http://112.74.39.180:80/comment/refresh?readly=' + readly + '&alzy=' + alzy,
@@ -160,16 +166,17 @@
                     console.log(date)
                     console.log(ret[i].zan)
                     console.log(typeof(ret[i].zan))
-                    var zanstr ;
-                    if(ret[i].zan > 0){
-                      zanstr =  `<span class="up" onclick="dianzan($(this))"><i class="up1"></i></span>`
+                    var zanstr;
+                    if (ret[i].zan > 0) {
+                        zanstr = `<span class="up" onclick="dianzan($(this))"><i class="up1"></i></span>`
                         console.log(zanstr)
-                      }else{
+                    } else {
                         zanstr = `<span class="up" onclick="dianzan($(this))"><i></i></span>`
                     }
+                    console.log(ret[i].userimg)
                     $(".content .comment_list").append(
                         `<div data-id="${ret[i].id}" class="recommend">${ret[i].id}
-                                    <div class="person_info">
+                                    <div onclick="headed()" class="person_info">
                                     <div class="head">
                                     <img src="${ret[i].userimg}" alt="" />
                                     </div>
@@ -177,11 +184,11 @@
                                   <div class="time">${date}</div>
                                     </div>
                                     <div class="text">${ret[i].text}</div>
-                                    <div class="included"><div>
+                                    <div onclick="cliforward($(this))" class="included"><div>
                                     <img src="${ret[i].img}"
                                     alt="" />
                                     </div><span><em>
-                                    《<text>${ret[i].bname}</text>》| ${ret[i].author}
+                                    《<text class="bookname">${ret[i].bname}</text>》| ${ret[i].author}
                                     </em><br /><p>${ret[i].biref}</p></span></div>
                                     <div class="person_point">
                                     ${zanstr}
@@ -203,15 +210,19 @@
                         for (var j = 0; j < len; j++) {
                             if (rets && rets[j].comtToUser) {
 
-                                $(".recommend[data-id=" + rets[j].forwardId + "]").append(`
+                                $(".recommend[data-id=" + rets[j].forwardId + "]").append(
+                                    `
                                             <ul>
                                                 <li onclick="recomment($(this))" data-isFirst="yes"><a href="">${rets[j].comtUser}</a>回复<a href="">${rets[j].comtToUser}</a><span>:${rets[j].text}</span></li> </ul>
-                                            `)
+                                            `
+                                )
                             } else if (rets) {
-                                $(".recommend[data-id=" + rets[j].forwardId + "]").append(`
+                                $(".recommend[data-id=" + rets[j].forwardId + "]").append(
+                                    `
                                             <ul>
                                                 <li onclick="recomment($(this))" data-isFirst="yes"><a href="">${rets[j].comtUser}</a><span>:${rets[j].text}</span></li> </ul>
-                                            `)
+                                            `
+                                )
                             }
 
                         }
@@ -232,7 +243,7 @@
     }
 
     function refresh() {
-        getComentData(0, 5, 1)
+        getComentData(0, 15, 1)
     }
 
     function commentSure() {
@@ -388,12 +399,14 @@
                           <div class="time">${date}</div>
                             </div>
                             <div class="text">${ret[i].text}</div>
-                            <div class="included"><div>
+                            <div class="included">
+                            <div>
                             <img src="${ret[i].img}"
                             alt="" />
                             </div><span><em>
                             《<text>${ret[i].bname}</text>》| ${ret[i].author}
-                            </em><br /><p>${ret[i].biref}</p></span></div>
+                            </em><br /><p>${ret[i].biref}</p></span>
+                            </div>
                             <div class="person_point">
                             <span onclick="dianzan($(this))" class="up"><i></i></span>
                             <span onclick="comment($(this))" class="comment" ><img src="../image/img/pinglun.png" alt=""></span>
@@ -402,67 +415,103 @@
                             </div>`
                     );
                 }
-
             })
             .fail(function(err) {
                 console.log(JSON.stringify(err))
             })
-
-
     }
 
-    function head() {
-        // 点击用户头像
-        $(".content").on('click', '.person_info', function() {
-            // var otherName = $(this).text();//用户名
-            var otherName = $(this).parents(".recommend").attr("data-id") //用户名
-            var lookname = $(this).text();
-            // var lookname = $api.getStorage('username');
-            $api.setStorage('look_name', lookname);
-            console.log(lookname)
-            console.log(otherName)
-            var model = initConfig();
-            var query = api.require('query');
-            query.createQuery(function(ret, err) {
-                if (ret) {
-                    var qid = ret.qid;
-                    query.whereEqual({
-                        qid: qid,
-                        value: lookname,
-                        column: 'username'
-                    });
-                    model.findAll({
-                        class: 'user',
-                        qid: qid
-                    }, function(ret, err) {
-                        if (ret) {
-                            console.log(JSON.stringify(ret))
-                            query.createQuery(function(ret, err) {
-                                var uqid = ret.qid;
-                                model.findById({
-                                    class: 'user',
-                                    id: 'id'
-                                }, function(ret, err) {
-
-                                });
-                            });
-                        }
-                    });
-                }
-            });
-            // $api.setStorage('otherName', otherName);
-            // var otherImg = $(this).user_head;//用户名
-            console.log($(this).text());
-            console.log(otherName);
-            api.openWin({
-                name: 'look_other',
-                url: './look_other.html',
-                pageParam: {
-                    otherName: otherName
+    function cliforward(self) { //点击转发内容
+        console.log(self)
+        console.log(JSON.stringify(self.attr("class")))
+        var bookname = self.find(".bookname").text();
+        console.log(bookname)
+        $.ajax({
+                url: 'http://112.74.39.180:80/detail',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    bookname: bookname
                 }
             })
-        })
+            .done(function(ret) {
+                console.log(JSON.stringify(ret));
+                console.log(JSON.stringify(ret.type));
+                // var type = ret.type;
+                var retAll = ret;
+                console.log(retAll)
+                    // var bookname
+                api.openWin({
+                    name: 'classify',
+                    url: './classify.html',
+                    pageParam: {
+                        retAll: retAll,
+                    }
+                })
+            })
+            .fail(function(err) {
+                console.log(JSON.stringify(err))
+            })
     }
+
+    function headed() {
+        api.toast({
+            msg: '暂未开放',
+            duration: 2000,
+            location: 'bottom'
+        });
+    }
+
+    // 点击用户头像
+    // $(".content").on('click', '.person_info', function() {
+    // var otherName = $(this).text();//用户名
+    // var otherName = $(this).parents(".recommend").attr("data-id") //用户名
+    // var lookname = $(this).text();
+    // // var lookname = $api.getStorage('username');
+    // $api.setStorage('look_name', lookname);
+    // console.log(lookname)
+    // console.log(otherName)
+    // var model = initConfig();
+    // var query = api.require('query');
+    // query.createQuery(function(ret, err) {
+    //     if (ret) {
+    //         var qid = ret.qid;
+    //         query.whereEqual({
+    //             qid: qid,
+    //             value: lookname,
+    //             column: 'username'
+    //         });
+    //         model.findAll({
+    //             class: 'user',
+    //             qid: qid
+    //         }, function(ret, err) {
+    //             if (ret) {
+    //                 console.log(JSON.stringify(ret))
+    //                 query.createQuery(function(ret, err) {
+    //                     var uqid = ret.qid;
+    //                     model.findById({
+    //                         class: 'user',
+    //                         id: 'id'
+    //                     }, function(ret, err) {
+    //
+    //                     });
+    //                 });
+    //             }
+    //         });
+    //     }
+    // });
+    // // $api.setStorage('otherName', otherName);
+    // // var otherImg = $(this).user_head;//用户名
+    // console.log($(this).text());
+    // console.log(otherName);
+    // api.openWin({
+    //     name: 'look_other',
+    //     url: './look_other.html',
+    //     pageParam: {
+    //         otherName: otherName
+    //     }
+    // })
+    // })
 </script>
 
 </html>

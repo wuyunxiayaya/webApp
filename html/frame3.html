@@ -22,67 +22,69 @@
             <span class="user_name">asdasd</span>
 
             <div style="display:inline-block" class="log_area">
-                <div class="log_on">注册 |</div>
-                <div class="personName">
+                <div onclick="regists()" class="log_on">注册 |</div>
+                <div onclick="nextLogin()" class="personName">
                     登陆
                 </div>
             </div>
 
 
         </div>
-        <!-- 足迹 今日已读 -->
-        <div class="wrap">
-            <div class="content">
-                <div class="foot"><img src="../image/img/jiaoya.png" alt="">足迹</div>
-                <div class="today"><img src="../image/img/xshu.png" alt="">今日已读<br/>
-                    <!-- <span>*本</span> -->
+        <div onclick="longout()" class="bag">
+            <!-- 足迹 今日已读 -->
+            <div class="wrap">
+                <div class="content">
+                    <div onclick="foots()" class="foot"><img src="../image/img/jiaoya.png" alt="">足迹</div>
+                    <div class="today"><img src="../image/img/xshu.png" alt="">今日已读<br/>
+                        <!-- <span>*本</span> -->
+                    </div>
                 </div>
             </div>
-        </div>
-        <!-- 阅读时长 -->
-        <div class="timer">
-            <img src="../image/img/nb-.png" alt="">
-            <span class="text">阅读时长：<text class="allTime">
+            <!-- 阅读时长 -->
+            <div class="timer">
+                <img src="../image/img/nb-.png" alt="">
+                <span class="text">阅读时长：<text class="allTime">
               <!-- <i class="second"></i>秒</text><text class="allTime"><i class="minute"></i>分</text><text class="allTime"><i class="clock"></i>时</text> -->
             </span>
-        </div>
-        <!-- 收藏等分块 -->
-        <div class="free">
-            <div class="in_free">
-                <div class="all">
-                    <div class="collect">
-                        <img src="../image/img/shoucang.png" alt=""> 收藏
+            </div>
+            <!-- 收藏等分块 -->
+            <div class="free">
+                <div class="in_free">
+                    <div class="all">
+                        <div onclick="collects()" class="collect">
+                            <img src="../image/img/shoucang.png" alt=""> 收藏
+                        </div>
                     </div>
-                </div>
-                <div class="all">
-                    <div class="account">
-                        <img src="../image/img/zhanghu.png" alt=""> 账户
-                        <span>0.00金币</span>
+                    <div class="all">
+                        <div class="account">
+                            <img src="../image/img/zhanghu.png" alt=""> 账户
+                            <span>0.00金币</span>
+                        </div>
                     </div>
-                </div>
-                <div class="all">
-                    <div class="gold">
-                        <img src="../image/img/qian2.png" alt=""> 读书金币
-                        <span>0金币</span>
+                    <div class="all">
+                        <div class="gold">
+                            <img src="../image/img/qian2.png" alt=""> 读书金币
+                            <span>0金币</span>
+                        </div>
                     </div>
-                </div>
-                <div class="all">
-                    <div class="sign">
-                        <img src="../image/img/icon.png" alt=""> 签到
-                        <span>0.00金币</span>
+                    <div class="all">
+                        <div class="sign">
+                            <img src="../image/img/icon.png" alt=""> 签到
+                            <span>0.00金币</span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- 我的社区 -->
-        <div class="community">
-            我的社区
-            <img src="../image/img/xiaoxi.png" alt="">
+            <!-- 我的社区 -->
+            <div onclick="communitise()" class="community">
+                我的社区
+                <img src="../image/img/xiaoxi.png" alt="">
+            </div>
         </div>
         <!-- 退出登陆 -->
         <div class="quit">
-            <button class="login">退出登陆</button>
-            <button class="log">登陆</button>
+            <button onclick="loginout()" class="login">退出登陆</button>
+            <button onclick="nextLogin()" class="log">登陆</button>
         </div>
     </div>
     <div class="img"><img src="" alt=""></div>
@@ -93,83 +95,115 @@
 <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 <script>
     apiready = function() {
-        open();
-        showA();
-        loginout();
+        // open();
+        showA(); //展示界面
+        // loginout(); //点击退出登陆按钮
+        // longout();//退出登陆后点击提示
     }
 
-    // 点击进入下一级界面
-    function open() {
-        $api.addEvt($api.dom(".personData .log_on"), 'click', function() { //点注册按钮
-            function regist() {
-                var logOn = 'logOn';
-                api.openWin({ //打开注册界面
-                    name: 'login', //必须有name
-                    url: './login.html', //打开的地址
-                    pageParam: {
-                        logOn: logOn
-                    } //传递参数 给注册界面
-                });
-            };
-            regist();
-        });
-        $api.addEvt($api.dom(".personData .personName"), 'click', function() { //点击登陆
-            function nextLogin() {
-                var login = 'login';
-                api.openWin({
-                        name: 'login',
-                        url: './login.html',
-                        pageParam: { //传递参数给登陆界面
-                            login: login
-                        }
-                    })
-                    // api.closeWin({
-                    //   name:'login'
-                    // })
-            };
-            nextLogin();
-        });
-        var username = $api.getStorage('username')//判断已登陆
-        if(username !== undefined){
 
-        $api.addEvt($api.dom(".empty .wrap .content .foot"), 'click', function() { //点击足迹
+    function regists() { //点击注册按钮
+        var logOn = 'logOn';
+        api.openWin({ //打开注册界面
+            name: 'login', //必须有name
+            url: './login.html', //打开的地址
+            pageParam: {
+                logOn: logOn
+            } //传递参数 给注册界面
+        });
+    };
+
+    // $api.addEvt($api.dom(".personData .personName"), 'click', function() { //点击登陆
+    function nextLogin() { //点击登陆
+        var login = 'login';
+        api.openWin({
+            name: 'login',
+            url: './login.html',
+            pageParam: { //传递参数给登陆界面
+                login: login
+            }
+        })
+    };
+    var username = $api.getStorage('username') //判断已登陆
+    function longout() {
+        if (username == undefined) {
+            api.toast({
+                msg: '请先登陆',
+                duration: '1000',
+                localtion: 'top'
+            });
+        } else {
+
+        }
+    }
+        function foots() {
+          if (username !== undefined) {
             api.openWin({ //打开足迹
-                name: 'foot',
-                url: './foot.html'
-                    // name: 'login_frame',
-                    // url: './login_frame.html'
-            })
-        });
-        $api.addEvt($api.dom(".free .in_free .all .collect"), 'click', function() { //点击收藏按钮
+                    name: 'foot',
+                    url: './foot.html'
+                        // name: 'login_frame',
+                        // url: './login_frame.html'
+                })
+          }else{
+            api.toast({
+                msg: '请先登陆',
+                duration: 2000,
+                location: 'bottom'
+            });
+
+          }
+        }
+
+        function collects() {
+          if(username !== undefined){
+            // $api.addEvt($api.dom(".free .in_free .all .collect"), 'click', function() { //点击收藏按钮
             api.openWin({ //打开收藏界面
-                name: 'collect',
-                url: './collect.html'
-            })
-        });
-        $api.addEvt($api.dom(".community"), 'click', function() { //点击社区
-            api.openWin({
-                name: 'community',
-                url: './community.html'
-            })
-        });
-      }else{
-        api.toast({
-            msg: '请先登陆',
-            duration: '1000',
-            localtion: 'top'
-        });
+                    name: 'collect',
+                    url: './collect.html'
+                })
+                // });
+          }else{
+            api.toast({
+              msg: '请先登陆',
+              duration: 2000,
+              location: 'bottom'
+          });
+        }
+
       }
-    }
+
+        function communitise() {
+          if(username !== undefined){
+            // $api.addEvt($api.dom(".community"), 'click', function() { //点击社区
+            api.openWin({
+                    name: 'community',
+                    url: './community.html'
+                })
+                // });
+          }else{
+            api.toast({
+              msg: '请先登陆',
+              duration: 2000,
+              location: 'bottom'
+          });
+        }
+
+
+        }
+
+    // }
+
+    // }
     // 接收登陆页面的参数
     function showA() {
-        var exit = $api.getStorage('exit')//判断已登陆
-        var username = $api.getStorage('username')//获取用户名··
+        var exit = $api.getStorage('exit') //判断已登陆
+        var username = $api.getStorage('username') //获取用户名··
         console.log(exit)
         console.log(username)
-        // console.log(readTime)
-        // console.log(userGold)
+            // console.log(readTime)
+            // console.log(userGold)
         console.log(userImage)
-        if (exit == "exitback") {//如果退出状态
+        if (exit == "exitback") { //如果退出状态
             // $(".quit .login").show().siblings().hide();
             $(".log_area").show()
             $(".personData .user_name").text("").hide();
@@ -180,18 +214,18 @@
             $(".quit .log").addClass('active').siblings("button").removeClass('active');
 
         }
-        if (exit == "exit") {//如果登陆状态
-          var userImage = $api.getStorage('userImage')//获取本地头像··
+        if (exit == "exit") { //如果登陆状态
+            var userImage = $api.getStorage('userImage') //获取本地头像··
             var username = $api.getStorage('username')
-            // var readTime = $api.getStorage('readTime')
-            // var userGold = $api.getStorage('userGold')
+                // var readTime = $api.getStorage('readTime')
+                // var userGold = $api.getStorage('userGold')
             console.log(userImage)
             console.log(username)
             $(".log_area").hide()
             $(".personData .user_name").show()
             $(".personData .user_name").text('用户名:' + username);
-            if(userImage !== null){
-              $(".img_tx").attr('src', userImage);
+            if (userImage !== null) {
+                $(".img_tx").attr('src', userImage);
             }
             // $(".allTime").text(readTime + '小时')
             // $(".account span").text(userGold)
@@ -256,20 +290,21 @@
     }
     // 退出登陆
     function loginout() {
-      var exit = $api.getStorage('exit')//判断已登陆
-      var login = 'login';
-        $api.addEvt($api.dom(".quit .login"), 'click', function() {
-          api.openWin({
-            name:'login',
-            url:'./login.html',
-            pageParam: { //传递参数给登陆界面
-                login: login
-            }
-          })
-          api.closeWin();
-          $api.setStorage('exit','exitback');
-          $api.clearStorage();
-        })
+        var exit = $api.getStorage('exit') //判断已登陆
+        var login = 'login';
+        // $api.addEvt($api.dom(".quit .login"), 'click', function() {
+            api.openWin({
+                name: 'login',
+                url: './login.html',
+                pageParam: { //传递参数给登陆界面
+                    login: login
+                }
+            })
+
+            api.closeWin();
+            $api.clearStorage();
+            $api.setStorage('exit', 'exitback');
+        // })
     }
     // // 建立查询语句 初始化
     // function initConfig() {
@@ -311,30 +346,30 @@
 
 
     // 点击头像
-    function showAction(){
-      var username = $api.getStorage('username')//判断已登陆
-      console.log(username)
-      if(username !== undefined){
-        api.actionSheet({
-            title: '上传图片',
-            cancelTitle: '取消',
-            buttons: ['拍照', '从手机相册选择', '查看头像']
-        }, function(ret, err) {
-            if (ret) {
-                console.log(JSON.stringify(ret))
-                console.log(JSON.stringify(err))
-                getPicture(ret.buttonIndex);
-                // test()
-                // console.log(ret)
-            }
-        });
-      }else{
-        api.toast({
-            msg: '请先登陆',
-            duration: '1000',
-            localtion: 'top'
-        });
-      }
+    function showAction() {
+        var username = $api.getStorage('username') //判断已登陆
+        console.log(username)
+        if (username !== undefined) {
+            api.actionSheet({
+                title: '上传图片',
+                cancelTitle: '取消',
+                buttons: ['拍照', '从手机相册选择', '查看头像']
+            }, function(ret, err) {
+                if (ret) {
+                    console.log(JSON.stringify(ret))
+                    console.log(JSON.stringify(err))
+                    getPicture(ret.buttonIndex);
+                    // test()
+                    // console.log(ret)
+                }
+            });
+        } else {
+            api.toast({
+                msg: '请先登陆',
+                duration: '1000',
+                localtion: 'top'
+            });
+        }
     }
 
     // function upDate(uname, img) {
@@ -412,25 +447,25 @@
                         console.log(img)
                         var userid = $api.getStorage('uid')
                         $.ajax({
-                          url:'http://112.74.39.180:80/update',
-                          type:'post',
-                          dataType:'json',
-                          data:{
-                            value:img,
-                            uid:userid,
-                            key:'img'
-                          }
-                        })
-                        .done(function(ret){
-                          console.log(JSON.stringify(ret))
-                          if(ret.status == 1){
-                            document.getElementById("img_tx").src = img;
-                              $api.setStorage('userImage', img);
-                          }
-                        })
-                        .fail(function(err){
-                          console.log(JSON.stringify(err))
-                        })
+                                url: 'http://112.74.39.180:80/update',
+                                type: 'post',
+                                dataType: 'json',
+                                data: {
+                                    value: img,
+                                    uid: userid,
+                                    key: 'img'
+                                }
+                            })
+                            .done(function(ret) {
+                                console.log(JSON.stringify(ret))
+                                if (ret.status == 1) {
+                                    document.getElementById("img_tx").src = img;
+                                    $api.setStorage('userImage', img);
+                                }
+                            })
+                            .fail(function(err) {
+                                console.log(JSON.stringify(err))
+                            })
                     }
                 }
             });
@@ -445,32 +480,32 @@
                 targetHeight: 200
             }, function(ret, err) {
                 if (ret) {
-                  if (ret.data != '' && ret.data != undefined) {
-                      console.log("1111333111111111111")
-                      var img = ret.base64Data; //图片链接
-                      console.log(img)
-                      var userid = $api.getStorage('uid')
-                      $.ajax({
-                        url:'http://112.74.39.180:80/update',
-                        type:'post',
-                        dataType:'json',
-                        data:{
-                          value:img,
-                          uid:userid,
-                          key:'img'
-                        }
-                      })
-                      .done(function(ret){
-                        console.log(JSON.stringify(ret))
-                        if(ret.status == 1){
-                          document.getElementById("img_tx").src = img;
-                            $api.setStorage('userImage', img);
-                        }
-                      })
-                      .fail(function(err){
-                        console.log(JSON.stringify(err))
-                      })
-                  }
+                    if (ret.data != '' && ret.data != undefined) {
+                        console.log("1111333111111111111")
+                        var img = ret.base64Data; //图片链接
+                        console.log(img)
+                        var userid = $api.getStorage('uid')
+                        $.ajax({
+                                url: 'http://112.74.39.180:80/update',
+                                type: 'post',
+                                dataType: 'json',
+                                data: {
+                                    value: img,
+                                    uid: userid,
+                                    key: 'img'
+                                }
+                            })
+                            .done(function(ret) {
+                                console.log(JSON.stringify(ret))
+                                if (ret.status == 1) {
+                                    document.getElementById("img_tx").src = img;
+                                    $api.setStorage('userImage', img);
+                                }
+                            })
+                            .fail(function(err) {
+                                console.log(JSON.stringify(err))
+                            })
+                    }
                 }
             });
         } else if (sourceType == 3) {

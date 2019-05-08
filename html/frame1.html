@@ -9,13 +9,12 @@
     <link rel="stylesheet" type="text/css" href="../css/style.css" />
     <link rel="stylesheet" href="../css/home/frame1.css">
     <script src="../script/echo.min.js"></script>
-
 </head>
 
 <body>
     <div class="empty">
         <!-- 左边分类 -->
-        <div class="left">
+        <div onclick="initEvent()" class="left">
              <ul class="list" id="lists">
 
             </ul>
@@ -47,15 +46,15 @@
     var flag = false;
     // 添加左边点击事件
     function initEvent(){
-        $(".left").on('click','li',function(){
+        // $(".left").on('click','li',function(){
             if($(this).hasClass("titleActive") || flag) return;  // 当前页面再次点击返回return;
             flag = true
             data = ''
             $(".right").children().remove();   // 添加数据前清除上次的数据
             $(this).addClass("titleActive").siblings().removeClass("titleActive")  // 添加颜色样式
-            getSelect($(this).text())  // 传入左边分类名称
+            // getSelect($(this).text())  // 传入左边分类名称
 
-      })
+      // })
     }
 
     // 获取左边数据，传入分类名称
