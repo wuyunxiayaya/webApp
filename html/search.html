@@ -13,7 +13,7 @@
 
 <body>
     <div class="wrape">
-        <div class="back">
+        <div onclick="cliclose()" class="back">
             <img src="../image/img/back.png" alt="">
         </div>
         <div class="input-kw-form">
@@ -49,7 +49,7 @@
         $("#input1").focus();
         // 初始化事件
         init();
-          // showNearly();
+        // showNearly();
         //  监听刷新搜索历史记录事件
         api.addEventListener({
             name: 'myEvent'
@@ -73,6 +73,12 @@
         // close()
     }
 
+    function cliclose() {
+        api.closeWin({
+            name: 'search'
+        });
+    }
+
     function clearNearly() {
         $(".clear_all").on('click', function() {
             $api.rmStorage('nearly');
@@ -88,13 +94,57 @@
             var len = nearlyListArr.length;
             $(".wrape .nearly ul").children().remove()
             for (var i = 0; i < len; i++) {
+                console.log(nearlyListArr[i])
                 if (nearlyListArr[i] == '') continue;
                 $(".wrape .nearly ul").prepend(`
-            <li class="read_list">${nearlyListArr[i]}<i><i></li>
+            <li onclick="listtip($(this))" class="read_list">${nearlyListArr[i]}<i><i></li>
             `)
             }
         } else {
             return;
+        }
+    }
+
+    function listtip(self) {
+        console.log(self.text());
+        console.log(self)
+        var bookname = self.text();
+        var val = $api.trim(self.text());
+        console.log(val)
+            // console.log(text)
+        setNearly(val);
+        if (val) {
+            $.ajax({
+                    url: 'http://112.74.39.180:80/search',
+                    type: 'post',
+                    dataType: 'json',
+                    data: {
+                        val: val,
+                        type: 2
+                    }
+                })
+                .done(function(ret) {
+                    console.log(JSON.stringify(ret));
+                    console.log('....111')
+                    console.log(JSON.stringify(ret.type));
+                    // var type = ret.type;
+                    var retAll = ret;
+                    console.log(retAll)
+                    if (ret.data) {
+                        api.openWin({
+                            name: 'classify',
+                            url: './classify.html',
+                            pageParam: {
+                                retAll: retAll,
+                            }
+                        })
+                    }
+                    // var bookname
+
+                })
+                .fail(function(err) {
+                    console.log(JSON.stringify(err))
+                })
         }
     }
 
@@ -162,13 +212,13 @@
 
     // 监听回车事件  13
     function keyDownSearch(e, target) {
-      console.log('....111')
-        // 兼容FF和IE和Opera
+        console.log('....111')
+            // 兼容FF和IE和Opera
         var theEvent = e || window.event;
         var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
         var inpuText = $api.dom("#input1")
         if (code == 13) {
-          console.log('....222222')
+            console.log('....222222')
             var val = $api.val(inpuText)
             getBook(val, 'vague')
             return false;
@@ -240,52 +290,52 @@
     // function
     function sousuo() {
         $api.addEvt($api.dom(".go"), 'click', function() {
-          val = $("#input1").val();
-          console.log(val)
-          $.ajax({
-            url:'http://112.74.39.180:80/search',
-            type:'post',
-            dataType:'JSON',
-            data:{
-              val:val,
-              type:'2'
-            }
-          })
-          .done(function(ret){
-            console.log(JSON.stringify(ret));
-            console.log(JSON.stringify(ret.type));
-            // var type = ret.type;
-            var retAll = ret;
-            console.log(retAll)
-            // var bookname
-            api.openWin({
-              name:'classify',
-              url:'./classify.html',
-              pageParam:{
-                retAll:retAll,
-              }
+                val = $("#input1").val();
+                console.log(val)
+                $.ajax({
+                        url: 'http://112.74.39.180:80/search',
+                        type: 'post',
+                        dataType: 'JSON',
+                        data: {
+                            val: val,
+                            type: '2'
+                        }
+                    })
+                    .done(function(ret) {
+                        console.log(JSON.stringify(ret));
+                        console.log(JSON.stringify(ret.type));
+                        // var type = ret.type;
+                        var retAll = ret;
+                        console.log(retAll)
+                            // var bookname
+                        api.openWin({
+                            name: 'classify',
+                            url: './classify.html',
+                            pageParam: {
+                                retAll: retAll,
+                            }
+                        })
+                    })
+                    .fail(function(err) {
+                        console.log(JSON.stringify(err))
+                    })
+                var value = $("#input1").val();
+                setNearly(value);
             })
-          })
-          .fail(function(err){
-            console.log(JSON.stringify(err))
-          })
-          var value = $("#input1").val();
-            setNearly(value);
-        })
-        // 点击跳转界面
-        $(".nearly").on('click','li',function(){//点击搜索记录
-          // var value = $("li a").text();
-          var liText = $(this).text()
-          getBook(liText)
-          console.log(liText)
-          // api.openWin({
-          //   name:'classify',
-          //   url:'./classify.html',
-          //   // pageParam:{
-          //   //   bookname:liText
-          //   // }
-          // })
-        })
+            // // 点击跳转界面
+            // $(".nearly").on('click','li',function(){//点击搜索记录
+            //   // var value = $("li a").text();
+            //   var liText = $(this).text()
+            //   getBook(liText)
+            //   console.log(liText)
+            //   // api.openWin({
+            //   //   name:'classify',
+            //   //   url:'./classify.html',
+            //   //   // pageParam:{
+            //   //   //   bookname:liText
+            //   //   // }
+            //   // })
+            // })
     }
 
     var val = ''
@@ -303,7 +353,8 @@
             console.dir(JSON.stringify(e.target))
             console.log(JSON.stringify(e.keyCode))
             console.log($("#input1").val())
-            val = $("#input1").val().replace(/(^\s*)|(\s*$)/g, "");
+            var valtext = $("#input1").val();
+            val = $api.trim(valtext);
             console.log(val)
             if (val) {
                 $.ajax({
@@ -312,22 +363,22 @@
                         dataType: 'json',
                         data: {
                             val: val,
-                            type:1
+                            type: 1
                         }
                     })
                     .done(function(ret) {
                         console.log(JSON.stringify(ret))
-                        if(ret.data){
-                          var len = ret.data.length;
-                          $(".search-list").children().remove();
-                          for (var i = 0; i < len; i++) {
-                              console.log(ret.data[i].name)
-                              $(".search-list").append(`
+                        if (ret.data) {
+                            var len = ret.data.length;
+                            $(".search-list").children().remove();
+                            for (var i = 0; i < len; i++) {
+                                console.log(ret.data[i].name)
+                                $(".search-list").append(`
                                      <li style="height:30px" onclick="getBook($(this).text(),'exact')">${ret.data[i].name}</li>
                                    `);
-                          }
-                          $(".search-list").show();
-                          $(".wrape .nearly").hide();
+                            }
+                            $(".search-list").show();
+                            $(".wrape .nearly").hide();
                         }
                     })
                     .fail(function(err) {
@@ -341,43 +392,42 @@
     }
 
     function getBook(text, type) {
-        var val = text.replace(/(^\s*)|(\s*$)/g, "");
+        var val = $api.trim(text);
         console.log(val)
         console.log(text)
         setNearly(val);
-        if(val){
-          $.ajax({
-            url:'http://112.74.39.180:80/search',
-            type:'post',
-            dataType:'json',
-            data:{
-              val:val,
-              type:2
-            }
-          })
-          .done(function(ret){
-            console.log(JSON.stringify(ret));
-            console.log('....111')
+        if (val) {
+            $.ajax({
+                    url: 'http://112.74.39.180:80/search',
+                    type: 'post',
+                    dataType: 'json',
+                    data: {
+                        val: val,
+                        type: 2
+                    }
+                })
+                .done(function(ret) {
+                    console.log(JSON.stringify(ret));
+                    console.log('....111')
+                    console.log(JSON.stringify(ret.type));
+                    // var type = ret.type;
+                    var retAll = ret;
+                    console.log(retAll)
+                    if (ret.data) {
+                        api.openWin({
+                            name: 'classify',
+                            url: './classify.html',
+                            pageParam: {
+                                retAll: retAll,
+                            }
+                        })
+                    }
+                    // var bookname
 
-            console.log(JSON.stringify(ret.type));
-            // var type = ret.type;
-            var retAll = ret;
-            console.log(retAll)
-            if(ret.data){
-              api.openWin({
-                name:'classify',
-                url:'./classify.html',
-                pageParam:{
-                  retAll:retAll,
-                }
-              })
-            }
-            // var bookname
-
-          })
-          .fail(function(err){
-            console.log(JSON.stringify(err))
-          })
+                })
+                .fail(function(err) {
+                    console.log(JSON.stringify(err))
+                })
         }
 
 

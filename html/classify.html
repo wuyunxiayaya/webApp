@@ -13,6 +13,10 @@
 
 <body>
     <div class="vessel">
+      <div class="noresultd">
+        <div class="text">无结果...</div>
+        <img src="../image/img/noresult.png" alt="">
+      </div>
         <header style="position:fixed;top:0px;width:100%;font-size:21px;color:#f50;height:50px;background-color:#dde;text-align:center;line-height:50px;padding-top:20px;">书名</header>
 
         <div style="position:fixed;top:0px;line-height:100px;" class="back">
@@ -78,6 +82,10 @@
       })
         var retAll = api.pageParam.retAll;
         // console.log(retAll.data[0])
+      if(retAll.status == 0){
+          $(".noresultd").css({'display':'block'})
+      }else{
+        console.log(JSON.stringify(retAll))
         console.log(retAll.data)
         console.log(retAll.type)
         var book = retAll.data[0].name.toString()
@@ -113,6 +121,8 @@
                 );
             }
         }
+      }
+
     }
 
     function clickSmoll(self) {
@@ -120,7 +130,6 @@
         var bookn = self.find(".bookn").text();
         $api.setStorage('theBook', bookn);
         console.log(bookn)
-
         var id = self.attr("data-id");
         $api.setStorage('theId', id);
         console.log(id)
