@@ -293,6 +293,10 @@
         var exit = $api.getStorage('exit') //判断已登陆
         var login = 'login';
         // $api.addEvt($api.dom(".quit .login"), 'click', function() {
+
+            api.closeWin();
+            $api.clearStorage();
+            $api.setStorage('exit', 'exitback');
             api.openWin({
                 name: 'login',
                 url: './login.html',
@@ -300,10 +304,6 @@
                     login: login
                 }
             })
-
-            api.closeWin();
-            $api.clearStorage();
-            $api.setStorage('exit', 'exitback');
         // })
     }
     // // 建立查询语句 初始化
